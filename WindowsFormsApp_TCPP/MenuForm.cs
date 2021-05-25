@@ -128,6 +128,10 @@ namespace WindowsFormsApp_TCPP
     public partial class MenuForm : Form
     {
         string[] roles = new string[] { "Journalist", "Photographer", "Editor", "Layout designer" };
+        int height = 100;
+        int block1 = 315;
+        int buttonSize1 = 130, buttonSize2 = 25;
+        int indent = 30;
 
         public MenuForm()
         {
@@ -135,6 +139,7 @@ namespace WindowsFormsApp_TCPP
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Welcome to my Program";
             this.Size = new Size(800, 500);
+            this.BackColor = System.Drawing.Color.BurlyWood;
             this.Shown += CreateButtonDelegate;
 
             FormsManager.Instance.Forms.Add(this);
@@ -152,17 +157,30 @@ namespace WindowsFormsApp_TCPP
             Button loginButton = new Button();
             this.Controls.Add(loginButton);
             loginButton.Text = "Log in";
-            loginButton.Size = new Size(130, 25);
-            loginButton.Location = new Point(315, 180);
+            loginButton.Font = new Font("Segoe UI", 10);
+            loginButton.Size = new Size(buttonSize1, buttonSize2);
+            loginButton.Location = new Point(block1, height);
 
             Button signupButton = new Button();
             this.Controls.Add(signupButton);
             signupButton.Text = "Sign up";
-            signupButton.Size = new Size(130, 25);
-            signupButton.Location = new Point(315, 210);
+            signupButton.Size = new Size(buttonSize1, buttonSize2);
+            signupButton.Location = new Point(block1, height + indent);
+
+            Button closeButton = new Button();
+            this.Controls.Add(closeButton);
+            closeButton.Text = "Exit";
+            closeButton.Size = new Size(buttonSize1, buttonSize2);
+            closeButton.Location = new Point(block1, height + indent*2);
 
             loginButton.Click += loginButton_Click;
             signupButton.Click += signupButton_Click;
+            closeButton.Click += closeButton_Click;
+        }
+
+        private void closeButton_Click(object sender, EventArgs eventArgs)
+        {
+            this.Close();
         }
 
         private void loginButton_Click(object sender, EventArgs eventArgs)
@@ -172,8 +190,8 @@ namespace WindowsFormsApp_TCPP
             WaterMarkTextBox nameTextBox = new WaterMarkTextBox();
             this.Controls.Add(nameTextBox);
             nameTextBox.WaterMarkText = "Username";
-            nameTextBox.Size = new Size(130, 25);
-            nameTextBox.Location = new Point(315, 50);
+            nameTextBox.Size = new Size(buttonSize1, buttonSize2);
+            nameTextBox.Location = new Point(block1, height);
             nameTextBox.Name = "UsernameTextbox";
 
             WaterMarkTextBox passwordTextBox = new WaterMarkTextBox();
@@ -181,21 +199,21 @@ namespace WindowsFormsApp_TCPP
             passwordTextBox.WaterMarkText = "Password";
             passwordTextBox.PasswordChar = '*';
             passwordTextBox.MaxLength = 14;
-            passwordTextBox.Size = new Size(130, 25);
-            passwordTextBox.Location = new Point(315, 80);
+            passwordTextBox.Size = new Size(buttonSize1, buttonSize2);
+            passwordTextBox.Location = new Point(block1, height + indent);
             passwordTextBox.Name = "PasswordTextbox";
-
-            Button backButton = new Button();
-            this.Controls.Add(backButton);
-            backButton.Size = new Size(130, 25);
-            backButton.Location = new Point(315, 140);
-            backButton.Text = "Back";
 
             Button loginButton = new Button();
             this.Controls.Add(loginButton);
-            loginButton.Size = new Size(130, 25);
-            loginButton.Location = new Point(315, 110);
+            loginButton.Size = new Size(buttonSize1, buttonSize2);
+            loginButton.Location = new Point(block1, height + indent*2);
             loginButton.Text = "Log in";
+
+            Button backButton = new Button();
+            this.Controls.Add(backButton);
+            backButton.Size = new Size(buttonSize1, buttonSize2);
+            backButton.Location = new Point(block1, height + indent*3);
+            backButton.Text = "Back";
 
             backButton.Click += CreateButtonDelegate;
             loginButton.Click += F_loginButton_Click;
@@ -208,8 +226,8 @@ namespace WindowsFormsApp_TCPP
             WaterMarkTextBox nameTextBox = new WaterMarkTextBox();
             this.Controls.Add(nameTextBox);
             nameTextBox.WaterMarkText = "Username";
-            nameTextBox.Size = new Size(130, 25);
-            nameTextBox.Location = new Point(315, 50);
+            nameTextBox.Size = new Size(buttonSize1, buttonSize2);
+            nameTextBox.Location = new Point(block1, height);
             nameTextBox.Name = "UsernameTextbox";
 
             WaterMarkTextBox passwordTextBox = new WaterMarkTextBox();
@@ -217,35 +235,35 @@ namespace WindowsFormsApp_TCPP
             passwordTextBox.WaterMarkText = "Password";
             passwordTextBox.PasswordChar = '*';
             passwordTextBox.MaxLength = 14;
-            passwordTextBox.Size = new Size(130, 25);
-            passwordTextBox.Location = new Point(315, 80);
+            passwordTextBox.Size = new Size(buttonSize1, buttonSize2);
+            passwordTextBox.Location = new Point(block1, height + indent);
             passwordTextBox.Name = "PasswordTextbox";
 
             Label RoleText = new Label();
             this.Controls.Add(RoleText);
             RoleText.Text = "Choose Role";
-            RoleText.Size = new Size(130, 25);
-            RoleText.Location = new Point(315, 110);
+            RoleText.Size = new Size(buttonSize1, buttonSize2);
+            RoleText.Location = new Point(block1, height + indent*2);
 
             ComboBox roleComboBox = new ComboBox();
             this.Controls.Add(roleComboBox);
             roleComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             roleComboBox.Items.AddRange(roles);
-            roleComboBox.Size = new Size(130, 25);
-            roleComboBox.Location = new Point(315, 140);
+            roleComboBox.Size = new Size(buttonSize1, buttonSize2);
+            roleComboBox.Location = new Point(block1, height + indent*3);
             roleComboBox.Name = "RoleTextbox";
-
-            Button backButton = new Button();
-            this.Controls.Add(backButton);
-            backButton.Size = new Size(130, 25);
-            backButton.Location = new Point(315, 200);
-            backButton.Text = "Back";
 
             Button signupButton = new Button();
             this.Controls.Add(signupButton);
-            signupButton.Size = new Size(130, 25);
-            signupButton.Location = new Point(315, 170);
+            signupButton.Size = new Size(buttonSize1, buttonSize2);
+            signupButton.Location = new Point(block1, height + indent*4);
             signupButton.Text = "Sign Up";
+
+            Button backButton = new Button();
+            this.Controls.Add(backButton);
+            backButton.Size = new Size(buttonSize1, buttonSize2);
+            backButton.Location = new Point(block1, height + indent*5);
+            backButton.Text = "Back";
 
             backButton.PerformClick();
             backButton.Click += CreateButtonDelegate;

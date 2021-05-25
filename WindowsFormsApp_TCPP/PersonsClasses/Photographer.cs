@@ -9,7 +9,7 @@ namespace WindowsFormsApp_TCPP
     public sealed class Photographer
     {
         public Photographer() { }
-        public static Photographer instance = null;
+        private static Photographer instance = null;
         public static Photographer Instance
         {
             get

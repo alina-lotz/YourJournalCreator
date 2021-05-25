@@ -9,7 +9,7 @@ namespace WindowsFormsApp_TCPP
     public sealed class Editor
     {
         public Editor() { }
-        public static Editor instance = null;
+        private static Editor instance = null;
         public static Editor Instance
         {
             get

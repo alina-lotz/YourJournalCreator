@@ -9,7 +9,7 @@ namespace WindowsFormsApp_TCPP
     public sealed class Journalist
     {
         public Journalist() { }
-        public static Journalist instance = null;
+        private static Journalist instance = null;
         public static Journalist Instance
         {
             get

@@ -9,7 +9,7 @@ namespace WindowsFormsApp_TCPP
     public sealed class LayoutArtist
     {
         public LayoutArtist() { }
-        public static LayoutArtist instance = null;
+        private static LayoutArtist instance = null;
         public static LayoutArtist Instance
         {
             get
