@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApp_TCPP.JournalClasses;
 
 namespace WindowsFormsApp_TCPP.PersonsMenuForms
 {
@@ -108,6 +109,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             this.Controls.Add(topicNameText);
             topicNameText.Size = new Size(articleContentWidth, FormsManager.Instance.buttonHeight);
             topicNameText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent);
+            topicNameText.Name = "TopicName";
             //design
             topicNameText.Font = FormsManager.Instance.fontType;
             topicNameText.BackColor = FormsManager.Instance.bColor;
@@ -129,6 +131,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             topicContectText.Size = new Size(articleContentWidth, articleContentHeight);
             topicContectText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent * 3);
             topicContectText.WordWrap = true;
+            topicContectText.Name = "TopicContent";
             //design
             topicContectText.Font = FormsManager.Instance.fontType;
             topicContectText.BackColor = FormsManager.Instance.bColor;
@@ -164,8 +167,69 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         }
         private void viewTopicsButton_Click(object sender, EventArgs eventArgs)
         {
+            this.Controls.Clear();
+
+            Panel buttonsPanel = new Panel();
+            this.Controls.Add(buttonsPanel);
+            buttonsPanel.Dock = DockStyle.Top;
+            buttonsPanel.Height = 30;
+            buttonsPanel.BackColor = Color.Black;
+            this.AutoScroll = true;
+            for (int i = 0; i < 10; i++)
+            {
+                //Panel newPanel = new Panel();
+                //newPanel.Height = 30;
+                //newPanel.Location = new Point(0, buttonsPanel.Height + i * newPanel.Height);
+                //newPanel.Width = this.Width;
+                //newPanel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                //newPanel.BackColor = Color.FromArgb(255, i, 255 - i, 255);
+                //this.Controls.Add(newPanel);
+                //for (int j = 0; j < 5; j++)
+                //{
+                //    var but = new Button();
+                //    but.Text = "asdasd";
+                //    but.Size = FormsManager.Instance.buttonSize;
+                //    but.Location = new Point(j * (but.Width + 2), 0);
+                //    newPanel.Controls.Add(but);
+                //}
+
+                TableLayoutPanel panel = new TableLayoutPanel();
+                panel.Height = 80;
+                panel.Location = new Point(0, buttonsPanel.Height + i * panel.Height);
+                panel.Width = this.Width - 50;
+                panel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                panel.RowCount = 1;
+                panel.ColumnCount = 5;
+                panel.ColumnStyles.Clear();
+                panel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+                this.Controls.Add(panel);
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+                for (int j = 0; j < 5; j++)
+                {
+                    var but = new Label();
+                    but.Click += (sender1, EventArgs) => { btnClick(sender1, eventArgs, i); };
+                    but.Text = "asdasd";
+                    but.TextAlign = ContentAlignment.MiddleCenter;
+                    but.Location = new Point(j * (but.Width + 2), 0);
+                    but.Size = FormsManager.Instance.buttonSize;
+                    but.Font = FormsManager.Instance.fontType;
+                    panel.Controls.Add(but);
+                    panel.SetColumn(but, j);
+                }
+            }
+
 
         }
+      
+        private void btnClick(object sender, EventArgs eventArgs, int buttonId)
+        {
+             
+        }
+
         private void signoutButton_Click(object sender, EventArgs eventArgs)
         {
             FormsManager.Instance.Forms[0].Show();
@@ -174,7 +238,16 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         }
         private void confirmTopicButton_Click(object sender, EventArgs eventArgs)
         {
+            RichTextBox TopicName = Controls.Find("TopicName", true)[0] as RichTextBox;
+            string text1 = TopicName.Text;
 
+            RichTextBox TopicContent = Controls.Find("TopicContent", true)[0] as RichTextBox;
+            string text2 = TopicContent.Text;
+
+            Topic newTopic = new Topic();
+            newTopic.topicName = text1;
+            newTopic.topicContent = text2;
+            TopicList.Instance.Topics.Add(newTopic);
         }
         private void exitButton_Click(object sender, EventArgs eventArgs)
         {
