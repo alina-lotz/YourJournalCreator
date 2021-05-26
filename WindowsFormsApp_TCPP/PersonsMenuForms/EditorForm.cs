@@ -36,7 +36,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
             Button viewTopicsButton = new Button();
             this.Controls.Add(viewTopicsButton);
-            viewTopicsButton.Text = "View articles";
+            viewTopicsButton.Text = "View all articles";
             viewTopicsButton.Size = FormsManager.Instance.buttonSize;
             viewTopicsButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height);
             //design

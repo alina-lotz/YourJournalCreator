@@ -271,7 +271,7 @@ namespace WindowsFormsApp_TCPP
             {
                 if ((person.Name.Equals(text1)) && (person.Password.Equals(text2)) && (person.Role.Equals(text3)))
                 {
-                    MessageBox.Show("This account already exists");
+                    MessageBox.Show("This account already exists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     signupButton_Click(null, null);
                     return;
                 }
@@ -307,7 +307,7 @@ namespace WindowsFormsApp_TCPP
                 EditorForm EditorForm1 = new EditorForm();
                 EditorForm1.Show();
             }
-            if (text3 == "LayoutArtist")
+            if (text3 == "Layout artist")
             {
                 LayoutArtist layoutArtist = new LayoutArtist();
                 layoutArtist.Name = text1;
@@ -330,7 +330,7 @@ namespace WindowsFormsApp_TCPP
 
             if (PersonsList.persons.Count == 0)
             {
-                MessageBox.Show("Wrong Username or Password!");
+                MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             foreach (Person person in PersonsList.persons)
@@ -361,7 +361,7 @@ namespace WindowsFormsApp_TCPP
                         EditorForm EditorForm1 = new EditorForm();
                         EditorForm1.Show();
                     }
-                    if (person.Role.Equals("LayoutArtist"))
+                    if (person.Role.Equals("Layout artist"))
                     {
                         LayoutArtist layoutArtist = new LayoutArtist();
                         layoutArtist.Name = text1;
@@ -375,7 +375,7 @@ namespace WindowsFormsApp_TCPP
                 }
                 else
                 {
-                    MessageBox.Show("Wrong Username or Password!");
+                    MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

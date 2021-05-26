@@ -50,7 +50,7 @@ namespace WindowsFormsApp_TCPP
             //list of forms references
             Forms = new List<Form>();
             //margins
-            roles = new string[] { "Journalist", "Photographer", "Editor", "Layout designer" };
+            roles = new string[] { "Journalist", "Photographer", "Editor", "Layout artist" };
             formSize = new Size(1000, 600);
             formPosition = FormStartPosition.CenterScreen;
             height = 120;
