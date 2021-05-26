@@ -15,10 +15,14 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         public JournalistForm()
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
+            this.StartPosition = FormsManager.Instance.formPosition;
             this.Text = "Journalist";
-            this.Size = new Size(800, 500);
+            this.Size = FormsManager.Instance.formSize;
+            this.BackColor = FormsManager.Instance.bgColor;
+
             this.Shown += CreateButtonDelegate;
+
+            FormsManager.Instance.Forms.Add(this);
         }
 
         private void JournalistForm_Load(object sender, EventArgs e)
@@ -30,81 +34,130 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         {
             this.Controls.Clear();
 
-            int block1 = 315;
-            int height = 100;
-
             Button addTopicButton = new Button();
             this.Controls.Add(addTopicButton);
             addTopicButton.Text = "Add article";
-            addTopicButton.Size = new Size(130, 25);
-            addTopicButton.Location = new Point(block1, height);
+            addTopicButton.Size = FormsManager.Instance.buttonSize;
+            addTopicButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height);
+            //design
+            addTopicButton.Font = FormsManager.Instance.fontType;
+            addTopicButton.BackColor = FormsManager.Instance.bColor;
+            addTopicButton.ForeColor = FormsManager.Instance.tColor;
+            addTopicButton.FlatStyle = FormsManager.Instance.flatStyle;
+            addTopicButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             Button viewTopicsButton = new Button();
             this.Controls.Add(viewTopicsButton);
             viewTopicsButton.Text = "View articles";
-            viewTopicsButton.Size = new Size(130, 25);
-            viewTopicsButton.Location = new Point(block1, height+30);
+            viewTopicsButton.Size = FormsManager.Instance.buttonSize;
+            viewTopicsButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent);
+            //design
+            viewTopicsButton.Font = FormsManager.Instance.fontType;
+            viewTopicsButton.BackColor = FormsManager.Instance.bColor;
+            viewTopicsButton.ForeColor = FormsManager.Instance.tColor;
+            viewTopicsButton.FlatStyle = FormsManager.Instance.flatStyle;
+            viewTopicsButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             Button signoutButton = new Button();
             this.Controls.Add(signoutButton);
             signoutButton.Text = "Sign out";
-            signoutButton.Size = new Size(130, 25);
-            signoutButton.Location = new Point(block1, height+60);
+            signoutButton.Size = FormsManager.Instance.buttonSize;
+            signoutButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 2);
+            //design
+            signoutButton.Font = FormsManager.Instance.fontType;
+            signoutButton.BackColor = FormsManager.Instance.bColor;
+            signoutButton.ForeColor = FormsManager.Instance.tColor;
+            signoutButton.FlatStyle = FormsManager.Instance.flatStyle;
+            signoutButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
-            Button closeButton = new Button();
-            this.Controls.Add(closeButton);
-            closeButton.Text = "Exit";
-            closeButton.Size = new Size(130, 25);
-            closeButton.Location = new Point(block1, height+90);
+            Button exitButton = new Button();
+            this.Controls.Add(exitButton);
+            exitButton.Text = "Exit";
+            exitButton.Size = FormsManager.Instance.buttonSize;
+            exitButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 3);
+            //design
+            exitButton.Font = FormsManager.Instance.fontType;
+            exitButton.BackColor = FormsManager.Instance.bColor;
+            exitButton.ForeColor = FormsManager.Instance.tColor;
+            exitButton.FlatStyle = FormsManager.Instance.flatStyle;
+            exitButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             addTopicButton.Click += addTopicButton_Click;
             viewTopicsButton.Click += viewTopicsButton_Click;
             signoutButton.Click += signoutButton_Click;
-            closeButton.Click += closeButton_Click;
+            exitButton.Click += exitButton_Click;
         }
 
         private void addTopicButton_Click(object sender, EventArgs eventArgs)
         {
             this.Controls.Clear();
 
-            int block1 = 100, block2 = 600;
-            int height = 20;
-            int contentSixe = 400;
+            int articleContentWidth = 400, articleContentHeight = 200;
 
             Label topicNameL = new Label();
             this.Controls.Add(topicNameL);
             topicNameL.Text = "Article title";
-            topicNameL.Size = new Size(130, 25);
-            topicNameL.Location = new Point(block1, height);
+            topicNameL.Size = FormsManager.Instance.buttonSize;
+            topicNameL.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height);
+            //design
+            topicNameL.Font = FormsManager.Instance.fontType;
+            topicNameL.ForeColor = FormsManager.Instance.bColor;
+            topicNameL.FlatStyle = FormsManager.Instance.flatStyle;
 
             RichTextBox topicNameText = new RichTextBox();
             this.Controls.Add(topicNameText);
-            topicNameText.Size = new Size(contentSixe, 25);
-            topicNameText.Location = new Point(block1, height+30);
+            topicNameText.Size = new Size(articleContentWidth, FormsManager.Instance.buttonHeight);
+            topicNameText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent);
+            //design
+            topicNameText.Font = FormsManager.Instance.fontType;
+            topicNameText.BackColor = FormsManager.Instance.bColor;
+            topicNameText.ForeColor = FormsManager.Instance.tColor;
+            topicNameText.BorderStyle = FormsManager.Instance.borderStyle;
 
             Label topicContentL = new Label();
             this.Controls.Add(topicContentL);
             topicContentL.Text = "Content";
-            topicContentL.Size = new Size(130, 25);
-            topicContentL.Location = new Point(block1, height+60);
+            topicContentL.Size = FormsManager.Instance.buttonSize;
+            topicContentL.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent * 2);
+            //design
+            topicContentL.Font = FormsManager.Instance.fontType;
+            topicContentL.ForeColor = FormsManager.Instance.bColor;
+            topicContentL.FlatStyle = FormsManager.Instance.flatStyle;
 
             RichTextBox topicContectText = new RichTextBox();
             this.Controls.Add(topicContectText);
-            topicContectText.Size = new Size(contentSixe, 100);
-            topicContectText.Location = new Point(block1, height+3*30);
+            topicContectText.Size = new Size(articleContentWidth, articleContentHeight);
+            topicContectText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent * 3);
             topicContectText.WordWrap = true;
+            //design
+            topicContectText.Font = FormsManager.Instance.fontType;
+            topicContectText.BackColor = FormsManager.Instance.bColor;
+            topicContectText.ForeColor = FormsManager.Instance.tColor;
+            topicContectText.BorderStyle = FormsManager.Instance.borderStyle;
 
             Button addButton = new Button();
             this.Controls.Add(addButton);
             addButton.Text = "Add topic";
-            addButton.Size = new Size(130, 25);
-            addButton.Location = new Point(block2, height+30);
+            addButton.Size = FormsManager.Instance.buttonSize;
+            addButton.Location = new Point(FormsManager.Instance.block3, topicNameText.Location.Y);
+            //design
+            addButton.Font = FormsManager.Instance.fontType;
+            addButton.BackColor = FormsManager.Instance.bColor;
+            addButton.ForeColor = FormsManager.Instance.tColor;
+            addButton.FlatStyle = FormsManager.Instance.flatStyle;
+            addButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             Button cancelButton = new Button();
             this.Controls.Add(cancelButton);
             cancelButton.Text = "Cancle";
-            cancelButton.Size = new Size(130, 25);
-            cancelButton.Location = new Point(block2, height+60);
+            cancelButton.Size = FormsManager.Instance.buttonSize;
+            cancelButton.Location = new Point(FormsManager.Instance.block3, topicNameText.Location.Y + FormsManager.Instance.indent);
+            //design
+            cancelButton.Font = FormsManager.Instance.fontType;
+            cancelButton.BackColor = FormsManager.Instance.bColor;
+            cancelButton.ForeColor = FormsManager.Instance.tColor;
+            cancelButton.FlatStyle = FormsManager.Instance.flatStyle;
+            cancelButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             addButton.Click += confirmTopicButton_Click;
             cancelButton.Click += CreateButtonDelegate;
@@ -116,13 +169,14 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         private void signoutButton_Click(object sender, EventArgs eventArgs)
         {
             FormsManager.Instance.Forms[0].Show();
+            FormsManager.Instance.Forms.RemoveAt(FormsManager.Instance.Forms.Count - 1);
             this.Close();
         }
         private void confirmTopicButton_Click(object sender, EventArgs eventArgs)
         {
 
         }
-        private void closeButton_Click(object sender, EventArgs eventArgs)
+        private void exitButton_Click(object sender, EventArgs eventArgs)
         {
             FormsManager.Instance.Forms[0].Close();
         }

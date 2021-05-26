@@ -11,135 +11,16 @@ using WindowsFormsApp_TCPP.PersonsMenuForms;
 
 namespace WindowsFormsApp_TCPP
 {
-    class WaterMarkTextBox : TextBox
-    {
-        private Font oldFont = null;
-        private Boolean waterMarkTextEnabled = false;
-
-        #region Attributes 
-        private Color _waterMarkColor = Color.Gray;
-        public Color WaterMarkColor
-        {
-            get { return _waterMarkColor; }
-            set
-            {
-                _waterMarkColor = value; Invalidate();/*thanks to Bernhard Elbl
-                                                              for Invalidate()*/
-            }
-        }
-
-        private string _waterMarkText = "Water Mark";
-        public string WaterMarkText
-        {
-            get { return _waterMarkText; }
-            set { _waterMarkText = value; Invalidate(); }
-        }
-        #endregion
-
-        //Default constructor
-        public WaterMarkTextBox()
-        {
-            JoinEvents(true);
-        }
-
-        //Override OnCreateControl ... thanks to  "lpgray .. codeproject guy"
-        protected override void OnCreateControl()
-        {
-            base.OnCreateControl();
-            WaterMark_Toggel(null, null);
-        }
-
-        //Override OnPaint
-        protected override void OnPaint(PaintEventArgs args)
-        {
-            // Use the same font that was defined in base class
-            System.Drawing.Font drawFont = new System.Drawing.Font(Font.FontFamily,
-                Font.Size, Font.Style, Font.Unit);
-            //Create new brush with gray color or 
-            SolidBrush drawBrush = new SolidBrush(WaterMarkColor);//use Water mark color
-            //Draw Text or WaterMark
-            args.Graphics.DrawString((waterMarkTextEnabled ? WaterMarkText : Text),
-                drawFont, drawBrush, new PointF(0.0F, 0.0F));
-            base.OnPaint(args);
-        }
-
-        private void JoinEvents(Boolean join)
-        {
-            if (join)
-            {
-                this.TextChanged += new System.EventHandler(this.WaterMark_Toggel);
-                this.LostFocus += new System.EventHandler(this.WaterMark_Toggel);
-                this.FontChanged += new System.EventHandler(this.WaterMark_FontChanged);
-                //No one of the above events will start immeddiatlly 
-                //TextBox control still in constructing, so,
-                //Font object (for example) couldn't be catched from within
-                //WaterMark_Toggle
-                //So, call WaterMark_Toggel through OnCreateControl after TextBox
-                //is totally created
-                //No doupt, it will be only one time call
-
-                //Old solution uses Timer.Tick event to check Create property
-            }
-        }
-
-        private void WaterMark_Toggel(object sender, EventArgs args)
-        {
-            if (this.Text.Length <= 0)
-                EnableWaterMark();
-            else
-                DisbaleWaterMark();
-        }
-
-        private void EnableWaterMark()
-        {
-            //Save current font until returning the UserPaint style to false (NOTE:
-            //It is a try and error advice)
-            oldFont = new System.Drawing.Font(Font.FontFamily, Font.Size, Font.Style,
-               Font.Unit);
-            //Enable OnPaint event handler
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.waterMarkTextEnabled = true;
-            //Triger OnPaint immediatly
-            Refresh();
-        }
-
-        private void DisbaleWaterMark()
-        {
-            //Disbale OnPaint event handler
-            this.waterMarkTextEnabled = false;
-            this.SetStyle(ControlStyles.UserPaint, false);
-            //Return back oldFont if existed
-            if (oldFont != null)
-                this.Font = new System.Drawing.Font(oldFont.FontFamily, oldFont.Size,
-                    oldFont.Style, oldFont.Unit);
-        }
-
-        private void WaterMark_FontChanged(object sender, EventArgs args)
-        {
-            if (waterMarkTextEnabled)
-            {
-                oldFont = new System.Drawing.Font(Font.FontFamily, Font.Size, Font.Style,
-                    Font.Unit);
-                Refresh();
-            }
-        }
-    }
-
     public partial class MenuForm : Form
     {
-        string[] roles = new string[] { "Journalist", "Photographer", "Editor", "Layout designer" };
-        int height = 100;
-        int block1 = 315;
-        int buttonSize1 = 130, buttonSize2 = 25;
-        int indent = 30;
-
         public MenuForm()
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Welcome to my Program";
-            this.Size = new Size(800, 500);
-            this.BackColor = System.Drawing.Color.BurlyWood;
+            this.StartPosition = FormsManager.Instance.formPosition;
+            this.Size = FormsManager.Instance.formSize;
+            this.BackColor = FormsManager.Instance.bgColor;
+            
             this.Shown += CreateButtonDelegate;
 
             FormsManager.Instance.Forms.Add(this);
@@ -157,28 +38,45 @@ namespace WindowsFormsApp_TCPP
             Button loginButton = new Button();
             this.Controls.Add(loginButton);
             loginButton.Text = "Log in";
-            loginButton.Font = new Font("Segoe UI", 10);
-            loginButton.Size = new Size(buttonSize1, buttonSize2);
-            loginButton.Location = new Point(block1, height);
+            loginButton.Size = FormsManager.Instance.buttonSize;
+            loginButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height);
+            //design
+            loginButton.Font = FormsManager.Instance.fontType;
+            loginButton.BackColor = FormsManager.Instance.bColor;
+            loginButton.ForeColor = FormsManager.Instance.tColor;
+            loginButton.FlatStyle = FormsManager.Instance.flatStyle;
+            loginButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             Button signupButton = new Button();
             this.Controls.Add(signupButton);
             signupButton.Text = "Sign up";
-            signupButton.Size = new Size(buttonSize1, buttonSize2);
-            signupButton.Location = new Point(block1, height + indent);
+            signupButton.Size = FormsManager.Instance.buttonSize;
+            signupButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent);
+            //design
+            signupButton.Font = FormsManager.Instance.fontType;
+            signupButton.BackColor = FormsManager.Instance.bColor;
+            signupButton.ForeColor = FormsManager.Instance.tColor;
+            signupButton.FlatStyle = FormsManager.Instance.flatStyle;
+            signupButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
-            Button closeButton = new Button();
-            this.Controls.Add(closeButton);
-            closeButton.Text = "Exit";
-            closeButton.Size = new Size(buttonSize1, buttonSize2);
-            closeButton.Location = new Point(block1, height + indent*2);
+            Button exitButton = new Button();
+            this.Controls.Add(exitButton);
+            exitButton.Text = "Exit";
+            exitButton.Size = FormsManager.Instance.buttonSize;
+            exitButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent *2);
+            //design
+            exitButton.Font = FormsManager.Instance.fontType;
+            exitButton.BackColor = FormsManager.Instance.bColor;
+            exitButton.ForeColor = FormsManager.Instance.tColor;
+            exitButton.FlatStyle = FormsManager.Instance.flatStyle;
+            exitButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             loginButton.Click += loginButton_Click;
             signupButton.Click += signupButton_Click;
-            closeButton.Click += closeButton_Click;
+            exitButton.Click += exitButton_Click;
         }
 
-        private void closeButton_Click(object sender, EventArgs eventArgs)
+        private void exitButton_Click(object sender, EventArgs eventArgs)
         {
             this.Close();
         }
@@ -187,33 +85,73 @@ namespace WindowsFormsApp_TCPP
         {
             this.Controls.Clear();
 
-            WaterMarkTextBox nameTextBox = new WaterMarkTextBox();
-            this.Controls.Add(nameTextBox);
-            nameTextBox.WaterMarkText = "Username";
-            nameTextBox.Size = new Size(buttonSize1, buttonSize2);
-            nameTextBox.Location = new Point(block1, height);
-            nameTextBox.Name = "UsernameTextbox";
+            Label username = new Label();
+            this.Controls.Add(username);
+            username.Text = "Username";
+            username.Size = FormsManager.Instance.buttonSize;
+            username.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height);
+            //design
+            username.Font = FormsManager.Instance.fontType;
+            username.ForeColor = FormsManager.Instance.bColor;
+            username.FlatStyle = FormsManager.Instance.flatStyle;
 
-            WaterMarkTextBox passwordTextBox = new WaterMarkTextBox();
+            TextBox nameTextBox = new TextBox();
+            this.Controls.Add(nameTextBox);
+            nameTextBox.Size = FormsManager.Instance.buttonSize;
+            nameTextBox.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent);
+            nameTextBox.Name = "UsernameTextbox";
+            //design
+            nameTextBox.Font = FormsManager.Instance.fontType;
+            nameTextBox.BackColor = FormsManager.Instance.bColor;
+            nameTextBox.ForeColor = FormsManager.Instance.tColor;
+            nameTextBox.BorderStyle = FormsManager.Instance.borderStyle;
+
+            Label password = new Label();
+            this.Controls.Add(password);
+            password.Text = "Password";
+            password.Size = FormsManager.Instance.buttonSize;
+            password.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 2);
+            //design
+            password.Font = FormsManager.Instance.fontType;
+            password.ForeColor = FormsManager.Instance.bColor;
+            password.FlatStyle = FormsManager.Instance.flatStyle;
+
+            TextBox passwordTextBox = new TextBox();
             this.Controls.Add(passwordTextBox);
-            passwordTextBox.WaterMarkText = "Password";
             passwordTextBox.PasswordChar = '*';
-            passwordTextBox.MaxLength = 14;
-            passwordTextBox.Size = new Size(buttonSize1, buttonSize2);
-            passwordTextBox.Location = new Point(block1, height + indent);
+            passwordTextBox.MaxLength = 16;
+            passwordTextBox.Size = FormsManager.Instance.buttonSize;
+            passwordTextBox.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 3);
             passwordTextBox.Name = "PasswordTextbox";
+            //design
+            passwordTextBox.Font = FormsManager.Instance.fontType;
+            passwordTextBox.BackColor = FormsManager.Instance.bColor;
+            passwordTextBox.ForeColor = FormsManager.Instance.tColor;
+            passwordTextBox.BorderStyle = FormsManager.Instance.borderStyle;
 
             Button loginButton = new Button();
             this.Controls.Add(loginButton);
-            loginButton.Size = new Size(buttonSize1, buttonSize2);
-            loginButton.Location = new Point(block1, height + indent*2);
+            loginButton.Size = FormsManager.Instance.buttonSize;
+            loginButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 4);
             loginButton.Text = "Log in";
+            //design
+            loginButton.Font = FormsManager.Instance.fontType;
+            loginButton.BackColor = FormsManager.Instance.bColor;
+            loginButton.ForeColor = FormsManager.Instance.tColor;
+            loginButton.FlatStyle = FormsManager.Instance.flatStyle;
+            loginButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             Button backButton = new Button();
             this.Controls.Add(backButton);
-            backButton.Size = new Size(buttonSize1, buttonSize2);
-            backButton.Location = new Point(block1, height + indent*3);
+            backButton.Size = FormsManager.Instance.buttonSize;
+            backButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 5);
             backButton.Text = "Back";
+            //design
+            backButton.Font = FormsManager.Instance.fontType;
+            backButton.BackColor = FormsManager.Instance.bColor;
+            backButton.ForeColor = FormsManager.Instance.tColor;
+            backButton.FlatStyle = FormsManager.Instance.flatStyle;
+            backButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             backButton.Click += CreateButtonDelegate;
             loginButton.Click += F_loginButton_Click;
@@ -223,59 +161,107 @@ namespace WindowsFormsApp_TCPP
         {
             this.Controls.Clear();
 
-            WaterMarkTextBox nameTextBox = new WaterMarkTextBox();
-            this.Controls.Add(nameTextBox);
-            nameTextBox.WaterMarkText = "Username";
-            nameTextBox.Size = new Size(buttonSize1, buttonSize2);
-            nameTextBox.Location = new Point(block1, height);
-            nameTextBox.Name = "UsernameTextbox";
+            Label username = new Label();
+            this.Controls.Add(username);
+            username.Text = "Username";
+            username.Size = FormsManager.Instance.buttonSize;
+            username.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height);
+            //design
+            username.Font = FormsManager.Instance.fontType;
+            username.ForeColor = FormsManager.Instance.bColor;
+            username.FlatStyle = FormsManager.Instance.flatStyle;
 
-            WaterMarkTextBox passwordTextBox = new WaterMarkTextBox();
+            TextBox nameTextBox = new TextBox();
+            this.Controls.Add(nameTextBox);
+            nameTextBox.Size = FormsManager.Instance.buttonSize;
+            nameTextBox.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent);
+            nameTextBox.Name = "UsernameTextbox";
+            //design
+            nameTextBox.Font = FormsManager.Instance.fontType;
+            nameTextBox.BackColor = FormsManager.Instance.bColor;
+            nameTextBox.ForeColor = FormsManager.Instance.tColor;
+            nameTextBox.BorderStyle = FormsManager.Instance.borderStyle;
+
+            Label password = new Label();
+            this.Controls.Add(password);
+            password.Text = "Password";
+            password.Size = FormsManager.Instance.buttonSize;
+            password.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 2);
+            //design
+            password.Font = FormsManager.Instance.fontType;
+            password.ForeColor = FormsManager.Instance.bColor;
+            password.FlatStyle = FormsManager.Instance.flatStyle;
+
+            TextBox passwordTextBox = new TextBox();
             this.Controls.Add(passwordTextBox);
-            passwordTextBox.WaterMarkText = "Password";
             passwordTextBox.PasswordChar = '*';
-            passwordTextBox.MaxLength = 14;
-            passwordTextBox.Size = new Size(buttonSize1, buttonSize2);
-            passwordTextBox.Location = new Point(block1, height + indent);
+            passwordTextBox.MaxLength = 16;
+            passwordTextBox.Size = FormsManager.Instance.buttonSize;
+            passwordTextBox.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 3);
             passwordTextBox.Name = "PasswordTextbox";
+            //design
+            passwordTextBox.Font = FormsManager.Instance.fontType;
+            passwordTextBox.BackColor = FormsManager.Instance.bColor;
+            passwordTextBox.ForeColor = FormsManager.Instance.tColor;
+            passwordTextBox.BorderStyle = FormsManager.Instance.borderStyle;
 
             Label RoleText = new Label();
             this.Controls.Add(RoleText);
             RoleText.Text = "Choose Role";
-            RoleText.Size = new Size(buttonSize1, buttonSize2);
-            RoleText.Location = new Point(block1, height + indent*2);
+            RoleText.Size = FormsManager.Instance.buttonSize;
+            RoleText.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 4);
+            //design
+            RoleText.Font = FormsManager.Instance.fontType;
+            RoleText.ForeColor = FormsManager.Instance.bColor;
+            RoleText.FlatStyle = FormsManager.Instance.flatStyle;
 
             ComboBox roleComboBox = new ComboBox();
             this.Controls.Add(roleComboBox);
             roleComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            roleComboBox.Items.AddRange(roles);
-            roleComboBox.Size = new Size(buttonSize1, buttonSize2);
-            roleComboBox.Location = new Point(block1, height + indent*3);
+            roleComboBox.Items.AddRange(FormsManager.Instance.roles);
+            roleComboBox.Size = FormsManager.Instance.buttonSize;
+            roleComboBox.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 5);
             roleComboBox.Name = "RoleTextbox";
+            //design
+            roleComboBox.Font = FormsManager.Instance.fontType;
+            roleComboBox.BackColor = FormsManager.Instance.bColor;
+            roleComboBox.ForeColor = FormsManager.Instance.tColor;
+            roleComboBox.FlatStyle = FormsManager.Instance.flatStyle;
 
             Button signupButton = new Button();
             this.Controls.Add(signupButton);
-            signupButton.Size = new Size(buttonSize1, buttonSize2);
-            signupButton.Location = new Point(block1, height + indent*4);
+            signupButton.Size = FormsManager.Instance.buttonSize;
+            signupButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 6);
             signupButton.Text = "Sign Up";
+            //design
+            signupButton.Font = FormsManager.Instance.fontType;
+            signupButton.BackColor = FormsManager.Instance.bColor;
+            signupButton.ForeColor = FormsManager.Instance.tColor;
+            signupButton.FlatStyle = FormsManager.Instance.flatStyle;
+            signupButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             Button backButton = new Button();
             this.Controls.Add(backButton);
-            backButton.Size = new Size(buttonSize1, buttonSize2);
-            backButton.Location = new Point(block1, height + indent*5);
+            backButton.Size = FormsManager.Instance.buttonSize;
+            backButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 7);
             backButton.Text = "Back";
+            //design
+            backButton.Font = FormsManager.Instance.fontType;
+            backButton.BackColor = FormsManager.Instance.bColor;
+            backButton.ForeColor = FormsManager.Instance.tColor;
+            backButton.FlatStyle = FormsManager.Instance.flatStyle;
+            backButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
-            backButton.PerformClick();
             backButton.Click += CreateButtonDelegate;
             signupButton.Click += F_signupButton_Click;
         }
         
         private void F_signupButton_Click(object sender, EventArgs eventArgs)
         {
-            WaterMarkTextBox usernameTextbox = Controls.Find("UsernameTextbox", true)[0] as WaterMarkTextBox;
+            TextBox usernameTextbox = Controls.Find("UsernameTextbox", true)[0] as TextBox;
             string text1 = usernameTextbox.Text;
 
-            WaterMarkTextBox passwordTextbox = Controls.Find("PasswordTextbox", true)[0] as WaterMarkTextBox;
+            TextBox passwordTextbox = Controls.Find("PasswordTextbox", true)[0] as TextBox;
             string text2 = passwordTextbox.Text;
 
             ComboBox roleTextbox = Controls.Find("RoleTextbox", true)[0] as ComboBox;
@@ -336,12 +322,10 @@ namespace WindowsFormsApp_TCPP
 
         private void F_loginButton_Click(object sender, EventArgs eventArgs)
         {
-            MessageBox.Show("fff");
-
-            WaterMarkTextBox usernameTextbox = Controls.Find("UsernameTextbox", true)[0] as WaterMarkTextBox;
+            TextBox usernameTextbox = Controls.Find("UsernameTextbox", true)[0] as TextBox;
             string text1 = usernameTextbox.Text;
 
-            WaterMarkTextBox passwordTextbox = Controls.Find("PasswordTextbox", true)[0] as WaterMarkTextBox;
+            TextBox passwordTextbox = Controls.Find("PasswordTextbox", true)[0] as TextBox;
             string text2 = passwordTextbox.Text;
 
             if (PersonsList.persons.Count == 0)
