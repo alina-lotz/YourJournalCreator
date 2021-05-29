@@ -10,7 +10,9 @@ namespace WindowsFormsApp_TCPP.JournalClasses
     {
         public string topicName, topicContent;
         public bool readyContent, readyPhotos, readyForEdit;
+        public DateTime date;
         public List<string> photos;
+        public string author;
 
         public Topic() 
         {

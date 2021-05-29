@@ -45,20 +45,25 @@ namespace WindowsFormsApp_TCPP
         public int borderSize;
         public BorderStyle borderStyle;
 
+        public int panelHeight, panelWidth;
+        public Size panelSize;
+
+        public int formHeigth, formWidth;
+
         private FormsManager()
         {
             //list of forms references
             Forms = new List<Form>();
-            //margins
+            //roles
             roles = new string[] { "Journalist", "Photographer", "Editor", "Layout artist" };
-            formSize = new Size(1000, 600);
-            formPosition = FormStartPosition.CenterScreen;
+            //layouts
             height = 120;
             block1 = 410; block2 = 150; block3 = 650;
+            indent = 38;
+            //buttons
             buttonWidth = 170;
             buttonHeight = 30;
             buttonSize = new Size(buttonWidth, buttonHeight);
-            indent = 38;
             //font
             fontSize = 12;
             textFont = "Segoe UI";
@@ -71,7 +76,16 @@ namespace WindowsFormsApp_TCPP
             flatStyle = FlatStyle.Flat;
             borderSize = 0;
             borderStyle = 0;
+            //forms
+            formHeigth = 600;
+            formWidth = 1000;
+            formSize = new Size(formWidth, formHeigth);
+            formPosition = FormStartPosition.CenterScreen;
+            //panels
+            panelHeight = buttonHeight + 10;
+            panelWidth = formWidth - 40;
+            panelSize = new Size(panelWidth, panelHeight);
         }
-        
+
     }
 }

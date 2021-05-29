@@ -22,14 +22,5 @@ namespace WindowsFormsApp_TCPP
             }
         }
         public string Name, Password;
-        public List<string> myTopics = new List<string>();
-        public void addTopic()
-        {
-
-        }
-        public void viewTopics()
-        {
-
-        }
     }
 }

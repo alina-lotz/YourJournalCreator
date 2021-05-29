@@ -285,33 +285,29 @@ namespace WindowsFormsApp_TCPP
 
             if (text3 == "Journalist")
             {
-                Journalist journalist = new Journalist();
-                journalist.Name = text1;
-                journalist.Password = text2;
+                Journalist.Instance.Name = text1;
+                Journalist.Instance.Password = text2;
                 JournalistForm JournalistForm1 = new JournalistForm();
                 JournalistForm1.Show();
             }
             if (text3 == "Photographer")
             {
-                Photographer photographer = new Photographer();
-                photographer.Name = text1;
-                photographer.Password = text2;
+                Photographer.Instance.Name = text1;
+                Photographer.Instance.Password = text2;
                 PhotographerForm PhotographerForm1 = new PhotographerForm();
                 PhotographerForm1.Show();
             }
             if (text3 == "Editor")
             {
-                Editor editor = new Editor();
-                editor.Name = text1;
-                editor.Password = text2;
+                Editor.Instance.Name = text1;
+                Editor.Instance.Password = text2;
                 EditorForm EditorForm1 = new EditorForm();
                 EditorForm1.Show();
             }
             if (text3 == "Layout artist")
             {
-                LayoutArtist layoutArtist = new LayoutArtist();
-                layoutArtist.Name = text1;
-                layoutArtist.Password = text2;
+                LayoutArtist.Instance.Name = text1;
+                LayoutArtist.Instance.Password = text2;
                 LayoutArtistForm LayoutArtistForm1 = new LayoutArtistForm();
                 LayoutArtistForm1.Show();
             }
@@ -328,44 +324,35 @@ namespace WindowsFormsApp_TCPP
             TextBox passwordTextbox = Controls.Find("PasswordTextbox", true)[0] as TextBox;
             string text2 = passwordTextbox.Text;
 
-            if (PersonsList.persons.Count == 0)
-            {
-                MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
             foreach (Person person in PersonsList.persons)
             {
                 if ((person.Name.Equals(text1)) && (person.Password.Equals(text2)))
                 {
                     if (person.Role.Equals("Journalist"))
                     {
-                        Journalist journalist = new Journalist();
-                        journalist.Name = text1;
-                        journalist.Password = text2;
+                        Journalist.Instance.Name = text1;
+                        Journalist.Instance.Password = text2;
                         JournalistForm JournalistForm1 = new JournalistForm();
                         JournalistForm1.Show();
                     }
                     if (person.Role.Equals("Photographer"))
                     {
-                        Photographer photographer = new Photographer();
-                        photographer.Name = text1;
-                        photographer.Password = text2;
+                        Photographer.Instance.Name = text1;
+                        Photographer.Instance.Password = text2;
                         PhotographerForm PhotographerForm1 = new PhotographerForm();
                         PhotographerForm1.Show();
                     }
                     if (person.Role.Equals("Editor"))
                     {
-                        Editor editor = new Editor();
-                        editor.Name = text1;
-                        editor.Password = text2;
+                        Editor.Instance.Name = text1;
+                        Editor.Instance.Password = text2;
                         EditorForm EditorForm1 = new EditorForm();
                         EditorForm1.Show();
                     }
                     if (person.Role.Equals("Layout artist"))
                     {
-                        LayoutArtist layoutArtist = new LayoutArtist();
-                        layoutArtist.Name = text1;
-                        layoutArtist.Password = text2;
+                        LayoutArtist.Instance.Name = text1;
+                        LayoutArtist.Instance.Password = text2;
                         LayoutArtistForm LayoutArtistForm1 = new LayoutArtistForm();
                         LayoutArtistForm1.Show();
                     }
@@ -373,10 +360,8 @@ namespace WindowsFormsApp_TCPP
                     loginButton_Click(null, null);
                     return;
                 }
-                else
-                {
-                    MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+
+                MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -21,6 +21,7 @@ namespace WindowsFormsApp_TCPP.JournalClasses
             }
         }
 
+
         public List<Topic> Topics;
         public TopicList()
         {
