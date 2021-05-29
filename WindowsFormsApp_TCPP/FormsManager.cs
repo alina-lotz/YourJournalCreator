@@ -26,6 +26,8 @@ namespace WindowsFormsApp_TCPP
         public List<Form> Forms;
 
         public string[] roles;
+        public string[] sort;
+
         public FormStartPosition formPosition;
         public Size formSize;
         public int height;
@@ -56,6 +58,8 @@ namespace WindowsFormsApp_TCPP
             Forms = new List<Form>();
             //roles
             roles = new string[] { "Journalist", "Photographer", "Editor", "Layout artist" };
+            //sort types
+            sort = new string[] { "name", "date", "autor"};
             //layouts
             height = 120;
             block1 = 410; block2 = 150; block3 = 650;

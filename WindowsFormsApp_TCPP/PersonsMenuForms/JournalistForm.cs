@@ -13,6 +13,101 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 {
     public partial class JournalistForm : Form
     {
+        public void viewListOfTopic(object sender, EventArgs eventArgs)
+        {
+            if (TopicList.Instance.Topics.Count != 0)
+            {
+                TableLayoutPanel panel = new TableLayoutPanel();
+                panel.AutoScroll = true;
+                panel.Width = FormsManager.Instance.panelWidth;
+                panel.Height = FormsManager.Instance.panelHeight * TopicList.Instance.Topics.Count;
+                panel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                panel.RowCount = TopicList.Instance.Topics.Count();
+                panel.ColumnCount = 6;
+                panel.ColumnStyles.Clear();
+                panel.RowStyles.Clear();
+                panel.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+                panel.Top = FormsManager.Instance.panelHeight;
+                this.Controls.Add(panel);
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+                for (int j = 0; j < TopicList.Instance.Topics.Count(); j++)
+                {
+                    panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+                    var topicName = new Label();
+                    var topicDate = new Label();
+                    var topicAuthor = new Label();
+                    var topicReadyContent = new Label();
+                    var topicReadyForEdit = new Label();
+                    //design
+                    topicName.Font = FormsManager.Instance.fontType;
+                    topicName.ForeColor = FormsManager.Instance.bColor;
+                    topicName.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicName.TextAlign = ContentAlignment.MiddleLeft;
+                    topicName.Dock = DockStyle.Fill;
+
+                    topicDate.Font = FormsManager.Instance.fontType;
+                    topicDate.ForeColor = FormsManager.Instance.bColor;
+                    topicDate.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicDate.TextAlign = ContentAlignment.MiddleLeft;
+                    topicDate.Dock = DockStyle.Fill;
+
+                    topicAuthor.Font = FormsManager.Instance.fontType;
+                    topicAuthor.ForeColor = FormsManager.Instance.bColor;
+                    topicAuthor.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicAuthor.TextAlign = ContentAlignment.MiddleLeft;
+                    topicAuthor.Dock = DockStyle.Fill;
+
+                    topicReadyContent.Font = FormsManager.Instance.fontType;
+                    topicReadyContent.ForeColor = FormsManager.Instance.bColor;
+                    topicReadyContent.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicReadyContent.TextAlign = ContentAlignment.MiddleLeft;
+                    topicReadyContent.Dock = DockStyle.Fill;
+
+                    topicReadyForEdit.Font = FormsManager.Instance.fontType;
+                    topicReadyForEdit.ForeColor = FormsManager.Instance.bColor;
+                    topicReadyForEdit.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicReadyForEdit.TextAlign = ContentAlignment.MiddleLeft;
+                    topicReadyForEdit.Dock = DockStyle.Fill;
+
+                    var editButton = new Button();
+                    //design
+                    editButton.Size = FormsManager.Instance.buttonSize;
+                    editButton.Font = FormsManager.Instance.fontType;
+                    editButton.BackColor = FormsManager.Instance.bColor;
+                    editButton.ForeColor = FormsManager.Instance.tColor;
+                    editButton.FlatStyle = FormsManager.Instance.flatStyle;
+                    editButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+                    editButton.Text = "Edit";
+
+                    int i = 0;
+
+                    topicName.Text = TopicList.Instance.Topics[j].topicName;
+                    panel.Controls.Add(topicName, i++, j);
+
+                    topicDate.Text = TopicList.Instance.Topics[j].date.ToString("MM/dd/yyyy hh:mm tt");
+                    panel.Controls.Add(topicDate, i++, j);
+
+                    topicAuthor.Text = TopicList.Instance.Topics[j].author;
+                    panel.Controls.Add(topicAuthor, i++, j);
+
+                    topicReadyContent.Text = TopicList.Instance.Topics[j].readyContent == true ? "✓" : "×";
+                    panel.Controls.Add(topicReadyContent, i++, j);
+
+                    topicReadyForEdit.Text = TopicList.Instance.Topics[j].readyForEdit == true ? "✓" : "×";
+                    panel.Controls.Add(topicReadyForEdit, i++, j);
+
+                    panel.Controls.Add(editButton, i, j);
+
+                    editButton.Click += (sender1, EventArgs) => { editButton_Click(sender1, eventArgs, j); };
+                }
+            }
+        }
+
         public JournalistForm()
         {
             InitializeComponent();
@@ -140,7 +235,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
             Button addButton = new Button();
             this.Controls.Add(addButton);
-            addButton.Text = "Add topic";
+            addButton.Text = "Add article";
             addButton.Size = FormsManager.Instance.buttonSize;
             addButton.Location = new Point(FormsManager.Instance.block3, topicNameText.Location.Y);
             //design
@@ -182,141 +277,87 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         private void viewTopicsButton_Click(object sender, EventArgs eventArgs)
         {
             this.Controls.Clear();
-            //this.AutoScroll = true;
             TableLayoutPanel buttonsPanel = new TableLayoutPanel();
+            buttonsPanel.Name = "ButtonsTablePanel";
             buttonsPanel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
             buttonsPanel.Size = FormsManager.Instance.panelSize;
             buttonsPanel.Top = 0;
             buttonsPanel.BackColor = FormsManager.Instance.bColor;
             buttonsPanel.RowCount = 1;
-            buttonsPanel.ColumnCount = 2;
+            buttonsPanel.ColumnCount = 3;
             buttonsPanel.ColumnStyles.Clear();
-            buttonsPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            buttonsPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
             this.Controls.Add(buttonsPanel);
             buttonsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            buttonsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80));
-            
-            var backButton = new Button();
-            //design
+            buttonsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+            buttonsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
+
+            Button backButton = new Button();
             backButton.Font = FormsManager.Instance.fontType;
             backButton.BackColor = FormsManager.Instance.bColor;
             backButton.ForeColor = FormsManager.Instance.tColor;
             backButton.FlatStyle = FormsManager.Instance.flatStyle;
             backButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
-            backButton.Text = "Test";
+            backButton.Text = "Back";
             backButton.Size = FormsManager.Instance.buttonSize;           
-
+            backButton.Click += CreateButtonDelegate;
             buttonsPanel.Controls.Add(backButton, 0, 0);
 
-            backButton.Click += CreateButtonDelegate;
-            MessageBox.Show(Journalist.Instance.Name);
+            Label sortLabel = new Label();
+            sortLabel.Text = "Sort by";
+            sortLabel.TextAlign = ContentAlignment.MiddleCenter;
+            sortLabel.Size = FormsManager.Instance.buttonSize;
+            sortLabel.Font = FormsManager.Instance.fontType;
+            sortLabel.ForeColor = FormsManager.Instance.tColor;
+            sortLabel.FlatStyle = FormsManager.Instance.flatStyle;
+            buttonsPanel.Controls.Add(sortLabel, 1, 0);
 
-            //Panel newPanel = new Panel();
-            //newPanel.Height = 30;
-            //newPanel.Location = new Point(0, buttonsPanel.Height + i * newPanel.Height);
-            //newPanel.Width = this.Width;
-            //newPanel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            //newPanel.BackColor = Color.FromArgb(255, i, 255 - i, 255);
-            //this.Controls.Add(newPanel);
-            //for (int j = 0; j < 5; j++)
-            //{
-            //    var but = new Button();
-            //    but.Text = "asdasd";
-            //    but.Size = FormsManager.Instance.buttonSize;
-            //    but.Location = new Point(j * (but.Width + 2), 0);
-            //    newPanel.Controls.Add(but);
-            //}
-            
-            if (TopicList.Instance.Topics.Count != 0)
-            {
-                TableLayoutPanel panel = new TableLayoutPanel();
-                panel.AutoScroll = true;
-                //panel.Location = new Point(0, buttonsPanel.Height + i * panel.Height);
-                panel.Width = FormsManager.Instance.panelWidth;
-                panel.Height = FormsManager.Instance.panelHeight * TopicList.Instance.Topics.Count;
-                panel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-                panel.RowCount = TopicList.Instance.Topics.Count();
-                panel.ColumnCount = 6;
-                panel.ColumnStyles.Clear();
-                panel.RowStyles.Clear();
-                panel.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
-                panel.Top = FormsManager.Instance.panelHeight;
-                this.Controls.Add(panel);
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
-                for (int j = 0; j < TopicList.Instance.Topics.Count(); j++)
-                {
-                    //var but = new Label();
-                    //but.Click += (sender1, EventArgs) => { btnClick(sender1, eventArgs, i); };
-                    //but.Text = "asdasd";
-                    //but.TextAlign = ContentAlignment.MiddleCenter;
-                    //but.Location = new Point(j * (but.Width + 2), 0);
-                    //but.Size = FormsManager.Instance.buttonSize;
-                    //but.Font = FormsManager.Instance.fontType;
-                    panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-                    var topicName = new Label();
-                    var topicDate = new Label();
-                    var topicAuthor = new Label();
-                    var topicReadyContent = new Label();
-                    var topicReadyForEdit = new Label();
-                    //design
-                    topicName.Font = FormsManager.Instance.fontType;
-                    topicName.ForeColor = FormsManager.Instance.bColor;
-                    topicName.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicName.TextAlign = ContentAlignment.MiddleCenter;
+            ComboBox sortComboBox = new ComboBox();
+            sortComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            sortComboBox.Items.AddRange(FormsManager.Instance.sort);
+            sortComboBox.Size = FormsManager.Instance.buttonSize;
+            sortComboBox.Name = "SortTextbox";
+            sortComboBox.Font = FormsManager.Instance.fontType;
+            sortComboBox.BackColor = FormsManager.Instance.bColor;
+            sortComboBox.ForeColor = FormsManager.Instance.tColor;
+            sortComboBox.FlatStyle = FormsManager.Instance.flatStyle;
+            buttonsPanel.Controls.Add(sortComboBox, 2, 0);
 
-                    topicDate.Font = FormsManager.Instance.fontType;
-                    topicDate.ForeColor = FormsManager.Instance.bColor;
-                    topicDate.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicDate.TextAlign = ContentAlignment.MiddleCenter;
+            sortComboBox.SelectedIndexChanged += sortComboBox_IndexChanged;
 
-                    topicAuthor.Font = FormsManager.Instance.fontType;
-                    topicAuthor.ForeColor = FormsManager.Instance.bColor;
-                    topicAuthor.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicAuthor.TextAlign = ContentAlignment.MiddleCenter;
-
-                    topicReadyContent.Font = FormsManager.Instance.fontType;
-                    topicReadyContent.ForeColor = FormsManager.Instance.bColor;
-                    topicReadyContent.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicReadyContent.TextAlign = ContentAlignment.MiddleCenter;
-
-                    topicReadyForEdit.Font = FormsManager.Instance.fontType;
-                    topicReadyForEdit.ForeColor = FormsManager.Instance.bColor;
-                    topicReadyForEdit.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicReadyForEdit.TextAlign = ContentAlignment.MiddleCenter;
-
-                    var but1 = new Button();
-                    //design
-                    but1.Size = FormsManager.Instance.buttonSize;
-                    but1.Font = FormsManager.Instance.fontType;
-                    but1.BackColor = FormsManager.Instance.bColor;
-                    but1.ForeColor = FormsManager.Instance.tColor;
-                    but1.FlatStyle = FormsManager.Instance.flatStyle;
-                    but1.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
-
-                    int i = 0;
-                    topicName.Text = TopicList.Instance.Topics[j].topicName;
-                    panel.Controls.Add(topicName, i++, j);
-                    topicDate.Text = TopicList.Instance.Topics[j].date.ToString("MM/dd/yyyy hh:mm tt");
-                    panel.Controls.Add(topicDate, i++, j);
-                    topicAuthor.Text = TopicList.Instance.Topics[j].author;
-                    panel.Controls.Add(topicAuthor, i++, j);
-                    topicReadyContent.Text = TopicList.Instance.Topics[j].readyContent == true ? "✓" : "×";
-                    panel.Controls.Add(topicReadyContent, i++, j);
-                    topicReadyForEdit.Text = TopicList.Instance.Topics[j].readyForEdit == true ? "✓" : "×";
-                    panel.Controls.Add(topicReadyForEdit, i++, j);
-                    but1.Text = "Edit";
-                    but1.Click += (sender1, EventArgs) => { btnClick(sender1, eventArgs, i); };
-                    panel.Controls.Add(but1, i, j);
-                }
-            }
+            viewListOfTopic(null, null);
         }
 
-        private void btnClick(object sender, EventArgs eventArgs, int buttonId)
+        private void sortComboBox_IndexChanged(object sender, EventArgs eventArgs)
+        {
+            ComboBox TopicName = Controls.Find("SortTextbox", true)[0] as ComboBox;
+            string text1 = TopicName.Text;
+            
+            string selectedSortType = text1;
+
+            foreach (Control control in this.Controls)
+            {
+                if (!control.Name.Equals("ButtonsTablePanel"))
+                        this.Controls.Remove(control);
+            }
+
+            if (selectedSortType == FormsManager.Instance.sort[0])
+            {
+                TopicList.Instance.Topics.Sort((t1, t2) => t1.topicName.CompareTo(t2.topicName));
+            }
+            if (selectedSortType == FormsManager.Instance.sort[1])
+            {
+                TopicList.Instance.Topics.Sort((t1, t2) => t1.date.CompareTo(t2.date));
+            }
+            if (selectedSortType == FormsManager.Instance.sort[2])
+            {
+                TopicList.Instance.Topics.Sort((t1, t2) => t1.author.CompareTo(t2.author));
+            }
+
+            viewListOfTopic(null, null);
+        }
+
+        private void editButton_Click(object sender, EventArgs eventArgs, int topicId)
         {
              
         }
