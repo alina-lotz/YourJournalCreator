@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormsManager.cs" />
+    <Compile Include="JournalClasses\JournalList.cs" />
     <Compile Include="JournalClasses\TopicsList.cs" />
     <Compile Include="JournalClasses\Journal.cs" />
     <Compile Include="JournalClasses\PhotosList.cs" />
