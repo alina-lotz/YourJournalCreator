@@ -162,7 +162,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     topicName.Text = TopicList.Instance.Topics[j - 1].topicName;
                     panel.Controls.Add(topicName, i++, j);
 
-                    topicDate.Text = TopicList.Instance.Topics[j - 1].date.ToString("MM/dd/yyyy hh:mm tt");
+                    topicDate.Text = TopicList.Instance.Topics[j - 1].date;
                     panel.Controls.Add(topicDate, i++, j);
 
                     topicAuthor.Text = TopicList.Instance.Topics[j - 1].author;
@@ -441,6 +441,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 if (topic.topicName.Equals(text1))
                 {
                     alreadyExists = true;
+                    topic.readyForEdit = true;
                     MessageBox.Show("An article with the same name already exists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 }
@@ -452,12 +453,12 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 newTopic.topicName = text1;
                 newTopic.topicContent = text2;
                 newTopic.readyForEdit = true;
-                newTopic.date = DateTime.Now;
+                newTopic.date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
                 newTopic.author = Journalist.Instance.Name;
                 TopicList.Instance.Topics.Add(newTopic);
-            }
 
-            CreateButtonDelegate(null, null);
+                CreateButtonDelegate(null, null);
+            }
         }
 
         private void confirmTopicButton_Click(object sender, EventArgs eventArgs)
@@ -485,12 +486,12 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 Topic newTopic = new Topic();
                 newTopic.topicName = text1;
                 newTopic.topicContent = text2;
-                newTopic.date = DateTime.Now;
+                newTopic.date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
                 newTopic.author = Journalist.Instance.Name;
                 TopicList.Instance.Topics.Add(newTopic);
-            }
 
-            CreateButtonDelegate(null, null);
+                CreateButtonDelegate(null, null);
+            }
         }
        
         private void exitButton_Click(object sender, EventArgs eventArgs)

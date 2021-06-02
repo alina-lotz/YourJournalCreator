@@ -24,10 +24,8 @@ namespace WindowsFormsApp_TCPP
         }
 
         public List<Form> Forms;
-
         public string[] roles;
         public string[] sort;
-
         public FormStartPosition formPosition;
         public Size formSize;
         public int height;
@@ -38,19 +36,16 @@ namespace WindowsFormsApp_TCPP
         public int fontSize;
         public string textFont;
         public Font fontType;
-
         public Color bgColor;
         public Color bColor;
         public Color tColor;
-
         public FlatStyle flatStyle;
         public int borderSize;
         public BorderStyle borderStyle;
-
         public int panelHeight, panelWidth;
         public Size panelSize;
-
         public int formHeigth, formWidth;
+        public string topicListData, journalListData, personListData;
 
         private FormsManager()
         {
@@ -89,6 +84,10 @@ namespace WindowsFormsApp_TCPP
             panelHeight = buttonHeight + 10;
             panelWidth = formWidth - 40;
             panelSize = new Size(panelWidth, panelHeight);
+            //files
+            topicListData = "D:/topicListData.dat";
+            journalListData = "D:/journalListData.dat";
+            personListData = "D:/personListData.dat";
         }
 
     }

@@ -10,7 +10,7 @@ namespace WindowsFormsApp_TCPP
     {
         public string journalName, author;
         public List<Topic> journalTopics;
-        public DateTime date;
+        public string date;
         public bool readyForPrint;
 
         public Journal()

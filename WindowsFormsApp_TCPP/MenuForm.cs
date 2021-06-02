@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp_TCPP.PersonsMenuForms;
+
+using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Globalization;
 
 namespace WindowsFormsApp_TCPP
 {
@@ -22,13 +28,136 @@ namespace WindowsFormsApp_TCPP
             this.BackColor = FormsManager.Instance.bgColor;
             
             this.Shown += CreateButtonDelegate;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
 
             FormsManager.Instance.Forms.Add(this);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           
+            //read topics from a file
+            string fileName = FormsManager.Instance.topicListData;
+            if (File.Exists(fileName))
+            {
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
+                int topicsCount = br.ReadInt32();
+                for (int i = 0; i < topicsCount; i++)
+                {
+                    Topic newTopic = new Topic();
+                    newTopic.topicName = br.ReadString();
+                    newTopic.topicContent = br.ReadString();
+                    newTopic.date = br.ReadString();
+                    newTopic.author = br.ReadString();
+                    newTopic.readyPhotos = br.ReadBoolean();
+                    newTopic.readyForEdit = br.ReadBoolean();
+                    newTopic.readyForJournal = br.ReadBoolean();
+                    TopicList.Instance.Topics.Add(newTopic);
+                }
+                br.Close();
+            }
+
+            //read journals from a file
+            fileName = FormsManager.Instance.journalListData;
+            if (File.Exists(fileName))
+            {
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
+                int journalsCount = br.ReadInt32();
+                for (int i = 0; i < journalsCount; i++)
+                {
+                    Journal newJournal = new Journal();
+                    newJournal.journalName = br.ReadString();
+                    newJournal.date = br.ReadString();
+                    newJournal.author = br.ReadString();
+                    newJournal.readyForPrint = br.ReadBoolean();
+                    int topicsCount = br.ReadInt32();
+                    for (int j = 0; j < topicsCount; j++)
+                    {
+                        string topicName = br.ReadString();
+                        foreach (Topic topic in TopicList.Instance.Topics)
+                        {
+                            if (topic.topicName.Equals(topicName))
+                            {
+                                newJournal.journalTopics.Add(topic);
+                            }
+                        }
+                    }
+                    JournalList.Instance.Journals.Add(newJournal);
+                }
+                br.Close();
+            }
+
+            //read persons from a file
+            fileName = FormsManager.Instance.personListData;
+            if (File.Exists(fileName))
+            {
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
+                int personsCount = br.ReadInt32();
+                for (int i = 0; i < personsCount; i++)
+                {
+                    Person newPerson = new Person();
+                    newPerson.Name = br.ReadString();
+                    newPerson.Password = br.ReadString();
+                    newPerson.Role = br.ReadString();
+
+                    PersonsList.persons.Add(newPerson);
+                }
+                br.Close();
+            }
+        }
+
+        private void FormIsClosing(object sender, EventArgs e)
+        {
+            //write topics to a file
+            string fileName = FormsManager.Instance.topicListData;
+            FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
+            BinaryWriter bw = new BinaryWriter(fs);
+            bw.Write(TopicList.Instance.Topics.Count);
+            for (int i = 0; i < TopicList.Instance.Topics.Count; i++)
+            {               
+                bw.Write(TopicList.Instance.Topics[i].topicName);
+                bw.Write(TopicList.Instance.Topics[i].topicContent);
+                bw.Write(TopicList.Instance.Topics[i].date);
+                bw.Write(TopicList.Instance.Topics[i].author);
+                bw.Write(TopicList.Instance.Topics[i].readyPhotos);
+                bw.Write(TopicList.Instance.Topics[i].readyForEdit);
+                bw.Write(TopicList.Instance.Topics[i].readyForJournal);
+            }
+            bw.Close();
+
+            //write journals to a file
+            fileName = FormsManager.Instance.journalListData;
+            fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
+            bw = new BinaryWriter(fs);
+            bw.Write(JournalList.Instance.Journals.Count);
+            for (int i = 0; i < JournalList.Instance.Journals.Count; i++)
+            {
+                bw.Write(JournalList.Instance.Journals[i].journalName);
+                bw.Write(JournalList.Instance.Journals[i].date);
+                bw.Write(JournalList.Instance.Journals[i].author);
+                bw.Write(JournalList.Instance.Journals[i].readyForPrint);
+                bw.Write(JournalList.Instance.Journals[i].journalTopics.Count);
+                for (int j = 0; j < JournalList.Instance.Journals[i].journalTopics.Count; j++)
+                {
+                    bw.Write(JournalList.Instance.Journals[i].journalTopics[j].topicName);
+                }
+            }
+            bw.Close();
+
+            //write persons to a file
+            fileName = FormsManager.Instance.personListData;
+            fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
+            bw = new BinaryWriter(fs);
+            bw.Write(PersonsList.persons.Count);
+            for (int i = 0; i < PersonsList.persons.Count; i++)
+            {
+                bw.Write(PersonsList.persons[i].Name);
+                bw.Write(PersonsList.persons[i].Password);
+                bw.Write(PersonsList.persons[i].Role);
+            }
+            bw.Close();
         }
 
         private void CreateButtonDelegate(object sender, EventArgs e)
@@ -271,6 +400,12 @@ namespace WindowsFormsApp_TCPP
 
             ComboBox roleTextbox = Controls.Find("RoleTextbox", true)[0] as ComboBox;
             string text3 = roleTextbox.Text;
+
+            if (text1 == "" || text2 == "" || text3 == "")
+            {
+                MessageBox.Show("Wrong format! Fill in all the fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             foreach (Person person in PersonsList.persons)
             {

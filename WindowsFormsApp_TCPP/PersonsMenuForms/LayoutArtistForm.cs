@@ -201,18 +201,16 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             {
                 Journal newJournal = new Journal();
                 newJournal.journalName = text1;
-                newJournal.date = DateTime.Now;
+                newJournal.date = DateTime.Now.ToString("MM / dd / yyyy hh: mm tt");
                 newJournal.author = LayoutArtist.Instance.Name;
                 for (int i = 0; i < journal.journalTopics.Count(); i++)
                 {
                     newJournal.journalTopics.Add(journal.journalTopics[i]);
                 }
                 JournalList.Instance.Journals.Add(newJournal);
+                journal.journalTopics.Clear();
+                CreateButtonDelegate(null, null);
             }
-
-            journal.journalTopics.Clear();
-
-            CreateButtonDelegate(null, null);
         }
 
         private void readyJournalForPrint_Click(object sender, EventArgs eventArgs)
@@ -237,18 +235,16 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 Journal newJournal = new Journal();
                 newJournal.journalName = text1;
                 newJournal.readyForPrint = true;
-                newJournal.date = DateTime.Now;
+                newJournal.date = DateTime.Now.ToString("MM / dd / yyyy hh: mm tt");
                 newJournal.author = LayoutArtist.Instance.Name;
                 for (int i = 0; i < journal.journalTopics.Count(); i++)
                 {
                     newJournal.journalTopics.Add(journal.journalTopics[i]);
                 }
                 JournalList.Instance.Journals.Add(newJournal);
+                journal.journalTopics.Clear();
+                CreateButtonDelegate(null, null);
             }
-
-            journal.journalTopics.Clear();
-
-            CreateButtonDelegate(null, null);
         }
 
         private void addTtoJButton_Click(object sender, EventArgs eventArgs)
@@ -635,7 +631,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     topicName.Text = TopicList.Instance.Topics[j - 1].topicName;
                     panel.Controls.Add(topicName, i++, j);
 
-                    topicDate.Text = TopicList.Instance.Topics[j - 1].date.ToString("MM/dd/yyyy hh:mm tt");
+                    topicDate.Text = TopicList.Instance.Topics[j - 1].date;
                     panel.Controls.Add(topicDate, i++, j);
 
                     topicAuthor.Text = TopicList.Instance.Topics[j - 1].author;

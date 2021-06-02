@@ -10,7 +10,7 @@ namespace WindowsFormsApp_TCPP
     {
         public string topicName, topicContent;
         public bool readyPhotos, readyForEdit, readyForJournal;
-        public DateTime date;
+        public string date;
         public List<string> photos;
         public string author;
 
