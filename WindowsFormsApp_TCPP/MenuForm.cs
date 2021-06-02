@@ -94,6 +94,7 @@ namespace WindowsFormsApp_TCPP
             username.Font = FormsManager.Instance.fontType;
             username.ForeColor = FormsManager.Instance.bColor;
             username.FlatStyle = FormsManager.Instance.flatStyle;
+            username.TextAlign = ContentAlignment.MiddleLeft;
 
             TextBox nameTextBox = new TextBox();
             this.Controls.Add(nameTextBox);
@@ -115,6 +116,7 @@ namespace WindowsFormsApp_TCPP
             password.Font = FormsManager.Instance.fontType;
             password.ForeColor = FormsManager.Instance.bColor;
             password.FlatStyle = FormsManager.Instance.flatStyle;
+            password.TextAlign = ContentAlignment.MiddleLeft;
 
             TextBox passwordTextBox = new TextBox();
             this.Controls.Add(passwordTextBox);
@@ -170,6 +172,7 @@ namespace WindowsFormsApp_TCPP
             username.Font = FormsManager.Instance.fontType;
             username.ForeColor = FormsManager.Instance.bColor;
             username.FlatStyle = FormsManager.Instance.flatStyle;
+            username.TextAlign = ContentAlignment.MiddleLeft;
 
             TextBox nameTextBox = new TextBox();
             this.Controls.Add(nameTextBox);
@@ -191,6 +194,7 @@ namespace WindowsFormsApp_TCPP
             password.Font = FormsManager.Instance.fontType;
             password.ForeColor = FormsManager.Instance.bColor;
             password.FlatStyle = FormsManager.Instance.flatStyle;
+            password.TextAlign = ContentAlignment.MiddleLeft;
 
             TextBox passwordTextBox = new TextBox();
             this.Controls.Add(passwordTextBox);
@@ -214,6 +218,7 @@ namespace WindowsFormsApp_TCPP
             RoleText.Font = FormsManager.Instance.fontType;
             RoleText.ForeColor = FormsManager.Instance.bColor;
             RoleText.FlatStyle = FormsManager.Instance.flatStyle;
+            RoleText.TextAlign = ContentAlignment.MiddleLeft;
 
             ComboBox roleComboBox = new ComboBox();
             this.Controls.Add(roleComboBox);
@@ -283,35 +288,31 @@ namespace WindowsFormsApp_TCPP
             person1.Role = text3;
             PersonsList.persons.Add(person1);
 
-            if (text3 == "Journalist")
+            if (text3 == FormsManager.Instance.roles[0])
             {
-                Journalist journalist = new Journalist();
-                journalist.Name = text1;
-                journalist.Password = text2;
+                Journalist.Instance.Name = text1;
+                Journalist.Instance.Password = text2;
                 JournalistForm JournalistForm1 = new JournalistForm();
                 JournalistForm1.Show();
             }
-            if (text3 == "Photographer")
+            if (text3 == FormsManager.Instance.roles[1])
             {
-                Photographer photographer = new Photographer();
-                photographer.Name = text1;
-                photographer.Password = text2;
+                Photographer.Instance.Name = text1;
+                Photographer.Instance.Password = text2;
                 PhotographerForm PhotographerForm1 = new PhotographerForm();
                 PhotographerForm1.Show();
             }
-            if (text3 == "Editor")
+            if (text3 == FormsManager.Instance.roles[2])
             {
-                Editor editor = new Editor();
-                editor.Name = text1;
-                editor.Password = text2;
+                Editor.Instance.Name = text1;
+                Editor.Instance.Password = text2;
                 EditorForm EditorForm1 = new EditorForm();
                 EditorForm1.Show();
             }
-            if (text3 == "Layout artist")
+            if (text3 == FormsManager.Instance.roles[3])
             {
-                LayoutArtist layoutArtist = new LayoutArtist();
-                layoutArtist.Name = text1;
-                layoutArtist.Password = text2;
+                LayoutArtist.Instance.Name = text1;
+                LayoutArtist.Instance.Password = text2;
                 LayoutArtistForm LayoutArtistForm1 = new LayoutArtistForm();
                 LayoutArtistForm1.Show();
             }
@@ -328,44 +329,35 @@ namespace WindowsFormsApp_TCPP
             TextBox passwordTextbox = Controls.Find("PasswordTextbox", true)[0] as TextBox;
             string text2 = passwordTextbox.Text;
 
-            if (PersonsList.persons.Count == 0)
-            {
-                MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
             foreach (Person person in PersonsList.persons)
             {
                 if ((person.Name.Equals(text1)) && (person.Password.Equals(text2)))
                 {
-                    if (person.Role.Equals("Journalist"))
+                    if (person.Role.Equals(FormsManager.Instance.roles[0]))
                     {
-                        Journalist journalist = new Journalist();
-                        journalist.Name = text1;
-                        journalist.Password = text2;
+                        Journalist.Instance.Name = text1;
+                        Journalist.Instance.Password = text2;
                         JournalistForm JournalistForm1 = new JournalistForm();
                         JournalistForm1.Show();
                     }
-                    if (person.Role.Equals("Photographer"))
+                    if (person.Role.Equals(FormsManager.Instance.roles[1]))
                     {
-                        Photographer photographer = new Photographer();
-                        photographer.Name = text1;
-                        photographer.Password = text2;
+                        Photographer.Instance.Name = text1;
+                        Photographer.Instance.Password = text2;
                         PhotographerForm PhotographerForm1 = new PhotographerForm();
                         PhotographerForm1.Show();
                     }
-                    if (person.Role.Equals("Editor"))
+                    if (person.Role.Equals(FormsManager.Instance.roles[2]))
                     {
-                        Editor editor = new Editor();
-                        editor.Name = text1;
-                        editor.Password = text2;
+                        Editor.Instance.Name = text1;
+                        Editor.Instance.Password = text2;
                         EditorForm EditorForm1 = new EditorForm();
                         EditorForm1.Show();
                     }
-                    if (person.Role.Equals("Layout artist"))
+                    if (person.Role.Equals(FormsManager.Instance.roles[3]))
                     {
-                        LayoutArtist layoutArtist = new LayoutArtist();
-                        layoutArtist.Name = text1;
-                        layoutArtist.Password = text2;
+                        LayoutArtist.Instance.Name = text1;
+                        LayoutArtist.Instance.Password = text2;
                         LayoutArtistForm LayoutArtistForm1 = new LayoutArtistForm();
                         LayoutArtistForm1.Show();
                     }
@@ -373,10 +365,8 @@ namespace WindowsFormsApp_TCPP
                     loginButton_Click(null, null);
                     return;
                 }
-                else
-                {
-                    MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+
+                MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
