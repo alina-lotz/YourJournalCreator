@@ -15,7 +15,7 @@ namespace WindowsFormsApp_TCPP
 
         public Journal()
         {
-            journalTopics = new List<Topic>;
+            journalTopics = new List<Topic>();
             readyForPrint = false;
         }
     }

@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp_TCPP.JournalClasses
+namespace WindowsFormsApp_TCPP
 {
     public class Topic
     {
         public string topicName, topicContent;
-        public bool readyContent, readyPhotos, readyForEdit;
+        public bool readyPhotos, readyForEdit, readyForJournal;
         public DateTime date;
         public List<string> photos;
         public string author;
 
         public Topic() 
         {
-            readyContent = false;
             readyPhotos = false;
             readyForEdit = false;
+            readyForJournal = false;
         }
     }
 }

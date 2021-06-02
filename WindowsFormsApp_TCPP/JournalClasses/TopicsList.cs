@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp_TCPP.JournalClasses
+namespace WindowsFormsApp_TCPP
 {
     public sealed class TopicList
     {

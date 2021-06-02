@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
 namespace WindowsFormsApp_TCPP.PersonsMenuForms
 {
@@ -33,41 +32,6 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         private void CreateButtonDelegate(object sender, EventArgs e)
         {
             this.Controls.Clear();
-
-            /*ImageList imgs = new ImageList();
-            String[] paths = { };
-            paths = Directory.GetFiles("D:/Application_TCPP");
-            //Image myImage = Image.FromFile("D:/Application_TCPP/img.png");
-            foreach(String path in paths)
-            {
-                imgs.Images.Add(Image.FromFile(path));
-            }
-
-            ListView listView = new ListView();
-            listView.View = View.Details;
-            listView.Columns.Add("Space", 150);
-            listView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
-
-            listView.Location = new Point(FormsManager.Instance.block3, FormsManager.Instance.height);
-            listView.Size = new Size(300, 300);
-            listView.SmallImageList = imgs;
-            listView.Items.Add("lalala", 0);
-            //listView.it ImageIndex = 0;
-
-            String selected = listView.SelectedItems[0].SubItems[0].Text;
-            MessageBox.Show(selected); */
-
-            string imgPath;
-
-            OpenFileDialog fdlg = new OpenFileDialog();
-            fdlg.Title = "C# Corner Open File Dialog";
-            fdlg.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF" /*|All files (*.*)|*.* */;
-            fdlg.FilterIndex = 1;
-            fdlg.RestoreDirectory = true;
-            if (fdlg.ShowDialog() == DialogResult.OK)
-            {
-                imgPath = fdlg.FileName;
-            }
 
             Button viewTopicsButton = new Button();
             this.Controls.Add(viewTopicsButton);

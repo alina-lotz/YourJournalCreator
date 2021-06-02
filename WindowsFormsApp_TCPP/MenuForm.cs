@@ -274,7 +274,7 @@ namespace WindowsFormsApp_TCPP
 
             foreach (Person person in PersonsList.persons)
             {
-                if ((person.Name.Equals(text1)) && (person.Password.Equals(text2)) && (person.Role.Equals(text3)))
+                if ( (person.Name.Equals(text1)) && (person.Password.Equals(text2)) )
                 {
                     MessageBox.Show("This account already exists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     signupButton_Click(null, null);
@@ -317,7 +317,7 @@ namespace WindowsFormsApp_TCPP
                 LayoutArtistForm1.Show();
             }
             this.Hide();
-            signupButton_Click(null, null);
+            CreateButtonDelegate(null, null);
             return;
         }
 
@@ -362,12 +362,14 @@ namespace WindowsFormsApp_TCPP
                         LayoutArtistForm1.Show();
                     }
                     this.Hide();
-                    loginButton_Click(null, null);
+                    CreateButtonDelegate(null, null);
                     return;
                 }
 
-                MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            MessageBox.Show("Wrong Username or Password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            loginButton_Click(null, null);
+            return;
         }
 
     }
