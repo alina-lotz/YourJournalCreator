@@ -52,6 +52,20 @@ namespace WindowsFormsApp_TCPP
                     newTopic.readyPhotos = br.ReadBoolean();
                     newTopic.readyForEdit = br.ReadBoolean();
                     newTopic.readyForJournal = br.ReadBoolean();
+
+                    int n = br.ReadInt32();
+                    byte[] newbytes = new byte[n];
+                    for (int j = 0; j < n; j++)
+                    {
+                        newbytes[j] = br.ReadByte();
+                    }
+                    
+                    using (var ms = new MemoryStream(newbytes))
+                    {
+                        Bitmap tempBM = new Bitmap(ms);
+                        newTopic.topicPhoto = new Bitmap(tempBM);
+                    }
+
                     TopicList.Instance.Topics.Add(newTopic);
                 }
                 br.Close();
@@ -108,8 +122,15 @@ namespace WindowsFormsApp_TCPP
             }
         }
 
+        public static byte[] ImageToByte(Bitmap img)
+        {
+            ImageConverter converter = new ImageConverter();
+            return (byte[])converter.ConvertTo(img, typeof(byte[]));
+        }
+
         private void FormIsClosing(object sender, EventArgs e)
         {
+            TopicList.Instance.Topics.Sort((t1, t2) => t1.topicName.CompareTo(t2.topicName));
             //write topics to a file
             string fileName = FormsManager.Instance.topicListData;
             FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
@@ -124,6 +145,11 @@ namespace WindowsFormsApp_TCPP
                 bw.Write(TopicList.Instance.Topics[i].readyPhotos);
                 bw.Write(TopicList.Instance.Topics[i].readyForEdit);
                 bw.Write(TopicList.Instance.Topics[i].readyForJournal);
+
+                byte[] newbytes = new byte[ImageToByte(TopicList.Instance.Topics[i].topicPhoto).Length];
+                newbytes = ImageToByte(TopicList.Instance.Topics[i].topicPhoto);
+                bw.Write(newbytes.Length);
+                bw.Write(newbytes);
             }
             bw.Close();
 
@@ -506,6 +532,5 @@ namespace WindowsFormsApp_TCPP
             loginButton_Click(null, null);
             return;
         }
-
     }
 }

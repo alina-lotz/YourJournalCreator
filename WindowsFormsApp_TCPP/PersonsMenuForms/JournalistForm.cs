@@ -58,8 +58,9 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 var topicNameL = new Label();
                 var topicDateL = new Label();
                 var topicAuthorL = new Label();
-                var topicReadyContentL = new Label();
                 var topicReadyForEditL = new Label();
+                var topicReadyPhotosL = new Label();
+
                 //design
                 topicNameL.Font = FormsManager.Instance.fontType;
                 topicNameL.ForeColor = FormsManager.Instance.bColor;
@@ -79,17 +80,17 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 topicAuthorL.TextAlign = ContentAlignment.MiddleLeft;
                 topicAuthorL.Dock = DockStyle.Fill;
 
-                topicReadyContentL.Font = FormsManager.Instance.fontType;
-                topicReadyContentL.ForeColor = FormsManager.Instance.bColor;
-                topicReadyContentL.FlatStyle = FormsManager.Instance.flatStyle;
-                topicReadyContentL.TextAlign = ContentAlignment.MiddleLeft;
-                topicReadyContentL.Dock = DockStyle.Fill;
-
                 topicReadyForEditL.Font = FormsManager.Instance.fontType;
                 topicReadyForEditL.ForeColor = FormsManager.Instance.bColor;
                 topicReadyForEditL.FlatStyle = FormsManager.Instance.flatStyle;
                 topicReadyForEditL.TextAlign = ContentAlignment.MiddleLeft;
                 topicReadyForEditL.Dock = DockStyle.Fill;
+
+                topicReadyPhotosL.Font = FormsManager.Instance.fontType;
+                topicReadyPhotosL.ForeColor = FormsManager.Instance.bColor;
+                topicReadyPhotosL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicReadyPhotosL.TextAlign = ContentAlignment.MiddleLeft;
+                topicReadyPhotosL.Dock = DockStyle.Fill;
 
                 int k = 0;
 
@@ -102,11 +103,11 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 topicAuthorL.Text = "Author";
                 panel.Controls.Add(topicAuthorL, k++, 0);
 
-                topicReadyContentL.Text = "Content";
-                panel.Controls.Add(topicReadyContentL, k++, 0);
+                topicReadyForEditL.Text = "Content";
+                panel.Controls.Add(topicReadyForEditL, k++, 0);
 
-                topicReadyForEditL.Text = "Photos";
-                panel.Controls.Add(topicReadyForEditL, k, 0);
+                topicReadyPhotosL.Text = "Photos";
+                panel.Controls.Add(topicReadyPhotosL, k, 0);
 
                 for (int j = 1; j < TopicList.Instance.Topics.Count() + 1; j++)
                 {
@@ -120,7 +121,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     topicName.Font = FormsManager.Instance.fontType;
                     topicName.ForeColor = FormsManager.Instance.bColor;
                     topicName.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicName.TextAlign = ContentAlignment.MiddleLeft;
+                    topicName.TextAlign = ContentAlignment.TopLeft;
                     topicName.Dock = DockStyle.Fill;
 
                     topicDate.Font = FormsManager.Instance.fontType;
@@ -171,7 +172,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     topicReadyForEdit.Text = TopicList.Instance.Topics[j - 1].readyForEdit == true ? "✓" : "×";
                     panel.Controls.Add(topicReadyForEdit, i++, j);
 
-                    topicReadyPhotos.Text = TopicList.Instance.Topics[j - 1].readyForEdit == true ? "✓" : "×";
+                    topicReadyPhotos.Text = TopicList.Instance.Topics[j - 1].readyPhotos == true ? "✓" : "×";
                     panel.Controls.Add(topicReadyPhotos, i++, j);
 
                     panel.Controls.Add(editButton, i, j);
@@ -416,7 +417,142 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
         private void editButton_Click(object sender, EventArgs eventArgs, int topicId)
         {
-             
+            this.Controls.Clear();
+
+            int articleContentWidth = 400, articleContentHeight = 200;
+            int photoSize = 280;
+
+            Label topicNameL = new Label();
+            this.Controls.Add(topicNameL);
+            topicNameL.Text = "Article title";
+            topicNameL.Size = FormsManager.Instance.buttonSize;
+            topicNameL.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2 + FormsManager.Instance.indent * 3);
+            //design
+            topicNameL.Font = FormsManager.Instance.fontType;
+            topicNameL.ForeColor = FormsManager.Instance.bColor;
+            topicNameL.FlatStyle = FormsManager.Instance.flatStyle;
+
+            RichTextBox topicNameText = new RichTextBox();
+            this.Controls.Add(topicNameText);
+            topicNameText.Size = new Size(articleContentWidth, FormsManager.Instance.buttonHeight);
+            topicNameText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2 + FormsManager.Instance.indent * 4);
+            topicNameText.Name = "TopicName";
+            topicNameText.WordWrap = true;
+            //design
+            topicNameText.Text = TopicList.Instance.Topics[topicId].topicName;
+            topicNameText.Font = FormsManager.Instance.fontType;
+            topicNameText.BackColor = FormsManager.Instance.bColor;
+            topicNameText.ForeColor = FormsManager.Instance.tColor;
+            topicNameText.BorderStyle = FormsManager.Instance.borderStyle;
+
+            Label topicContentL = new Label();
+            this.Controls.Add(topicContentL);
+            topicContentL.Text = "Content";
+            topicContentL.Size = FormsManager.Instance.buttonSize;
+            topicContentL.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2 + FormsManager.Instance.indent * 5);
+            //design
+            topicContentL.Font = FormsManager.Instance.fontType;
+            topicContentL.ForeColor = FormsManager.Instance.bColor;
+            topicContentL.FlatStyle = FormsManager.Instance.flatStyle;
+
+            RichTextBox topicContectText = new RichTextBox();
+            this.Controls.Add(topicContectText);
+            topicContectText.Size = new Size(articleContentWidth, articleContentHeight);
+            topicContectText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2 + FormsManager.Instance.indent * 6);
+            topicContectText.WordWrap = true;
+            topicContectText.Name = "TopicContent";
+            //design
+            topicContectText.Text = TopicList.Instance.Topics[topicId].topicContent;
+            topicContectText.Font = FormsManager.Instance.fontType;
+            topicContectText.BackColor = FormsManager.Instance.bColor;
+            topicContectText.ForeColor = FormsManager.Instance.tColor;
+            topicContectText.BorderStyle = FormsManager.Instance.borderStyle;
+
+            PictureBox imageControl = new PictureBox();
+            imageControl.Name = "TopicPhoto";
+            imageControl.Size = new Size(photoSize, photoSize);
+            imageControl.Location = new Point(FormsManager.Instance.block2 + articleContentWidth + 20, topicNameText.Location.Y);
+            imageControl.SizeMode = PictureBoxSizeMode.Zoom;
+            this.Controls.Add(imageControl);
+            if (TopicList.Instance.Topics[topicId].topicPhoto != null)
+            {
+                imageControl.Image = TopicList.Instance.Topics[topicId].topicPhoto;
+            }
+
+            Button editButton = new Button();
+            this.Controls.Add(editButton);
+            editButton.Text = "Edit";
+            editButton.Size = FormsManager.Instance.buttonSize;
+            editButton.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2);
+            //design
+            editButton.Font = FormsManager.Instance.fontType;
+            editButton.BackColor = FormsManager.Instance.bColor;
+            editButton.ForeColor = FormsManager.Instance.tColor;
+            editButton.FlatStyle = FormsManager.Instance.flatStyle;
+            editButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+
+            Button readyForEditButton = new Button();
+            this.Controls.Add(readyForEditButton);
+            readyForEditButton.Text = "Send to Editor";
+            readyForEditButton.Size = FormsManager.Instance.buttonSize;
+            readyForEditButton.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2 + FormsManager.Instance.indent);
+            //design
+            readyForEditButton.Font = FormsManager.Instance.fontType;
+            readyForEditButton.BackColor = FormsManager.Instance.bColor;
+            readyForEditButton.ForeColor = FormsManager.Instance.tColor;
+            readyForEditButton.FlatStyle = FormsManager.Instance.flatStyle;
+            readyForEditButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+
+            Button cancelButton = new Button();
+            this.Controls.Add(cancelButton);
+            cancelButton.Text = "Cancel";
+            cancelButton.Size = FormsManager.Instance.buttonSize;
+            cancelButton.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2 + FormsManager.Instance.indent * 2);
+            //design
+            cancelButton.Font = FormsManager.Instance.fontType;
+            cancelButton.BackColor = FormsManager.Instance.bColor;
+            cancelButton.ForeColor = FormsManager.Instance.tColor;
+            cancelButton.FlatStyle = FormsManager.Instance.flatStyle;
+            cancelButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+
+            editButton.Click += (sender1, EventArgs) => { confirmEditing_Click(sender1, eventArgs, topicId); };
+            readyForEditButton.Click += (sender1, EventArgs) => { confirmReadyForEdit_Click(sender1, eventArgs, topicId); };
+            cancelButton.Click += viewTopicsButton_Click;
+        }
+
+        private void confirmEditing_Click(object sender, EventArgs eventArgs, int topicId)
+        {
+            RichTextBox TopicName = Controls.Find("TopicName", true)[0] as RichTextBox;
+            string text1 = TopicName.Text;
+
+            RichTextBox TopicContent = Controls.Find("TopicContent", true)[0] as RichTextBox;
+            string text2 = TopicContent.Text;
+
+            bool alreadyExists = false;
+
+            foreach (Topic topic in TopicList.Instance.Topics)
+            {
+                if (topic.topicName.Equals(text1))
+                {
+                    alreadyExists = true;
+                    topic.readyForEdit = true;
+                    MessageBox.Show("An article with the same name already exists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                }
+            }
+
+            if (!alreadyExists)
+            {
+                TopicList.Instance.Topics[topicId].topicName = text1;
+                TopicList.Instance.Topics[topicId].topicContent = text2;
+                TopicList.Instance.Topics[topicId].date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+            }
+        }
+
+        private void confirmReadyForEdit_Click(object sender, EventArgs eventArgs, int topicId)
+        {
+            TopicList.Instance.Topics[topicId].readyForEdit = true;
+            TopicList.Instance.Topics[topicId].date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
         }
 
         private void signoutButton_Click(object sender, EventArgs eventArgs)

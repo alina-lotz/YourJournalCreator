@@ -13,6 +13,8 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
     public partial class LayoutArtistForm : Form
     {
         Journal journal = new Journal();
+        bool journalAlreadyExist = false;
+        int existedJournalId;
 
         public LayoutArtistForm()
         {
@@ -26,7 +28,6 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
             FormsManager.Instance.Forms.Add(this);
         }
-
         
         private void LayoutArtist_Load(object sender, EventArgs e)
         {
@@ -89,7 +90,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             exitButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             createJournal.Click += addJournalButton_Click;
-            //viewJournalsButton.Click +=;
+            viewJournalsButton.Click += viewJournalsButton_Click;
             signoutButton.Click += signoutButton_Click;
             exitButton.Click += exitButton_Click;
         }
@@ -117,6 +118,10 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             {
                 journalNameText.Text = journal.journalName;
             }
+            if (journalAlreadyExist)
+            {
+                journalNameText.Text = JournalList.Instance.Journals[existedJournalId].journalName;
+            }
             this.Controls.Add(journalNameText);
             journalNameText.Size = new Size(journalContentWidth, FormsManager.Instance.buttonHeight);
             journalNameText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent);
@@ -140,7 +145,6 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             viewPanelOfTopics(null, null);
 
             Button addButton = new Button();
-            this.Controls.Add(addButton);
             addButton.Text = "Add journal";
             addButton.Size = FormsManager.Instance.buttonSize;
             addButton.Location = new Point(FormsManager.Instance.block3, journalNameText.Location.Y);
@@ -149,6 +153,25 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             addButton.ForeColor = FormsManager.Instance.tColor;
             addButton.FlatStyle = FormsManager.Instance.flatStyle;
             addButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+
+            Button editButton = new Button();
+            editButton.Text = "Save changes";
+            editButton.Size = FormsManager.Instance.buttonSize;
+            editButton.Location = new Point(FormsManager.Instance.block3, journalNameText.Location.Y);
+            editButton.Font = FormsManager.Instance.fontType;
+            editButton.BackColor = FormsManager.Instance.bColor;
+            editButton.ForeColor = FormsManager.Instance.tColor;
+            editButton.FlatStyle = FormsManager.Instance.flatStyle;
+            editButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+
+            if (!journalAlreadyExist)
+            {
+                this.Controls.Add(addButton);
+            }
+            else
+            {
+                this.Controls.Add(addButton);
+            }
 
             Button readyForPrint = new Button();
             this.Controls.Add(readyForPrint);
@@ -173,9 +196,17 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             cancelButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
             addButton.Click += confirmJournalButton_Click;
+            editButton.Click += confirmJournalButton_Click;
             addTtoJButton.Click += addTtoJButton_Click;
             readyForPrint.Click += readyJournalForPrint_Click;
-            cancelButton.Click += CreateButtonDelegate;
+            if (journalAlreadyExist)
+            {
+                cancelButton.Click += viewJournalsButton_Click;
+            }
+            else
+            {
+                cancelButton.Click += CreateButtonDelegate;
+            }
         }
 
 
@@ -199,6 +230,18 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
             if (!alreadyExists)
             {
+                if (journalAlreadyExist)
+                {
+                    JournalList.Instance.Journals[existedJournalId].journalName = text1;
+                    JournalList.Instance.Journals[existedJournalId].journalTopics.Clear();
+                    for (int i = 0; i < journal.journalTopics.Count(); i++)
+                    {
+                        JournalList.Instance.Journals[existedJournalId].journalTopics.Add(journal.journalTopics[i]);
+                    }
+                    journal.journalTopics.Clear();
+                    journal.journalName = "";
+                    return;
+                }
                 Journal newJournal = new Journal();
                 newJournal.journalName = text1;
                 newJournal.date = DateTime.Now.ToString("MM / dd / yyyy hh: mm tt");
@@ -232,6 +275,19 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
             if (!alreadyExists)
             {
+                if (journalAlreadyExist)
+                {
+                    JournalList.Instance.Journals[existedJournalId].journalName = text1;
+                    JournalList.Instance.Journals[existedJournalId].readyForPrint = true;
+                    JournalList.Instance.Journals[existedJournalId].journalTopics.Clear();
+                    for (int i = 0; i < journal.journalTopics.Count(); i++)
+                    {
+                        JournalList.Instance.Journals[existedJournalId].journalTopics.Add(journal.journalTopics[i]);
+                    }
+                    journal.journalTopics.Clear();
+                    journal.journalName = "";
+                    return;
+                }
                 Journal newJournal = new Journal();
                 newJournal.journalName = text1;
                 newJournal.readyForPrint = true;
@@ -243,7 +299,9 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 }
                 JournalList.Instance.Journals.Add(newJournal);
                 journal.journalTopics.Clear();
+                journal.journalName = "";
                 CreateButtonDelegate(null, null);
+                return;
             }
         }
 
@@ -266,6 +324,124 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             topicsPanel.Name = "PanelOfTopics";
             topicsPanel.Size = new Size(panelWidth, panelHeight);
             topicsPanel.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent * 4);
+
+            if (journalAlreadyExist && JournalList.Instance.Journals[existedJournalId].journalTopics.Count() != 0)
+            {
+                TableLayoutPanel topicsListPanel = new TableLayoutPanel();
+                topicsListPanel.AutoScroll = true;
+                topicsListPanel.Dock = DockStyle.Fill;
+                topicsListPanel.RowCount = journal.journalTopics.Count();
+                topicsListPanel.ColumnCount = 5;
+                topicsListPanel.ColumnStyles.Clear();
+                topicsListPanel.RowStyles.Clear();
+                topicsListPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+                topicsListPanel.Top = FormsManager.Instance.panelHeight * journal.journalTopics.Count();
+                topicsListPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+                topicsListPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+                topicsListPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+                topicsListPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+                topicsListPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+                topicsListPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, FormsManager.Instance.panelHeight));
+                topicsPanel.Controls.Add(topicsListPanel);
+
+                var topicNameL = new Label();
+                var topicReadyForJournalL = new Label();
+                var topicReadyPhotosL = new Label();
+                //design
+                topicNameL.Font = FormsManager.Instance.fontType;
+                topicNameL.ForeColor = FormsManager.Instance.bColor;
+                topicNameL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicNameL.TextAlign = ContentAlignment.MiddleLeft;
+                topicNameL.Dock = DockStyle.Fill;
+
+                topicReadyForJournalL.Font = FormsManager.Instance.fontType;
+                topicReadyForJournalL.ForeColor = FormsManager.Instance.bColor;
+                topicReadyForJournalL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicReadyForJournalL.TextAlign = ContentAlignment.MiddleLeft;
+                topicReadyForJournalL.Dock = DockStyle.Fill;
+
+                topicReadyPhotosL.Font = FormsManager.Instance.fontType;
+                topicReadyPhotosL.ForeColor = FormsManager.Instance.bColor;
+                topicReadyPhotosL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicReadyPhotosL.TextAlign = ContentAlignment.MiddleLeft;
+                topicReadyPhotosL.Dock = DockStyle.Fill;
+
+                int k = 0;
+
+                topicNameL.Text = "Name";
+                topicsListPanel.Controls.Add(topicNameL, k++, 0);
+
+                topicReadyForJournalL.Text = "Journal";
+                topicsListPanel.Controls.Add(topicReadyForJournalL, k++, 0);
+
+                topicReadyPhotosL.Text = "Photos";
+                topicsListPanel.Controls.Add(topicReadyPhotosL, k, 0);
+
+                for (int j = 1; j < journal.journalTopics.Count() + 1; j++)
+                {
+                    topicsListPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, FormsManager.Instance.panelHeight));
+                    var topicName = new Label();
+                    var topicReadyForJournal = new Label();
+                    var topicReadyPhotos = new Label();
+                    //design
+                    topicName.Font = FormsManager.Instance.fontType;
+                    topicName.ForeColor = FormsManager.Instance.bColor;
+                    topicName.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicName.TextAlign = ContentAlignment.MiddleLeft;
+                    topicName.Dock = DockStyle.Fill;
+
+                    topicReadyForJournal.Font = FormsManager.Instance.fontType;
+                    topicReadyForJournal.ForeColor = FormsManager.Instance.bColor;
+                    topicReadyForJournal.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicReadyForJournal.TextAlign = ContentAlignment.MiddleCenter;
+                    topicReadyForJournal.Dock = DockStyle.Fill;
+
+                    topicReadyPhotos.Font = FormsManager.Instance.fontType;
+                    topicReadyPhotos.ForeColor = FormsManager.Instance.bColor;
+                    topicReadyPhotos.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicReadyPhotos.TextAlign = ContentAlignment.MiddleCenter;
+                    topicReadyPhotos.Dock = DockStyle.Fill;
+
+                    var viewTopicButton = new Button();
+                    var delTopicButton = new Button();
+                    //design
+                    viewTopicButton.Size = FormsManager.Instance.buttonSize;
+                    viewTopicButton.Font = FormsManager.Instance.fontType;
+                    viewTopicButton.BackColor = FormsManager.Instance.bColor;
+                    viewTopicButton.ForeColor = FormsManager.Instance.tColor;
+                    viewTopicButton.FlatStyle = FormsManager.Instance.flatStyle;
+                    viewTopicButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+                    viewTopicButton.Text = "View";
+
+                    delTopicButton.Size = FormsManager.Instance.buttonSize;
+                    delTopicButton.Font = FormsManager.Instance.fontType;
+                    delTopicButton.BackColor = FormsManager.Instance.bColor;
+                    delTopicButton.ForeColor = FormsManager.Instance.tColor;
+                    delTopicButton.FlatStyle = FormsManager.Instance.flatStyle;
+                    delTopicButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+                    delTopicButton.Text = "Delete";
+
+                    int i = 0;
+
+                    topicName.Text = JournalList.Instance.Journals[existedJournalId].journalTopics[j - 1].topicName;
+                    topicsListPanel.Controls.Add(topicName, i++, j);
+
+                    topicReadyForJournal.Text = JournalList.Instance.Journals[existedJournalId].journalTopics[j - 1].readyForJournal == true ? "✓" : "×";
+                    topicsListPanel.Controls.Add(topicReadyForJournal, i++, j);
+
+                    topicReadyPhotos.Text = JournalList.Instance.Journals[existedJournalId].journalTopics[j - 1].readyPhotos == true ? "✓" : "×";
+                    topicsListPanel.Controls.Add(topicReadyPhotos, i++, j);
+
+                    topicsListPanel.Controls.Add(viewTopicButton, i++, j);
+                    topicsListPanel.Controls.Add(delTopicButton, i, j);
+
+                    int topicId = j - 1;
+
+                    viewTopicButton.Click += (sender1, EventArgs) => { viewOneButton_Click(sender1, eventArgs, topicId); };
+                    delTopicButton.Click += (sender1, EventArgs) => { delOneButton_Click(sender1, eventArgs, topicId); };
+                    return;
+                }
+            }
 
             if (journal.journalTopics.Count() != 0)
             {
@@ -387,7 +563,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
         private void viewOneButton_Click(object sender, EventArgs eventArgs, int topicId)
         {
-            viewTopicButton_Click(null, null, topicId);
+            viewTopicButton_Click(null, null, topicId, false);
         }
 
         private void delOneButton_Click(object sender, EventArgs eventArgs, int topicId)
@@ -400,7 +576,14 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     break;
                 }
             }
-            journal.journalTopics.RemoveAt(topicId);
+            if (journalAlreadyExist)
+            {
+                JournalList.Instance.Journals[existedJournalId].journalTopics.RemoveAt(topicId);
+            }
+            else
+            {
+                journal.journalTopics.RemoveAt(topicId);
+            }
             viewPanelOfTopics(null, null);
         }
 
@@ -580,7 +763,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     topicName.Font = FormsManager.Instance.fontType;
                     topicName.ForeColor = FormsManager.Instance.bColor;
                     topicName.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicName.TextAlign = ContentAlignment.MiddleLeft;
+                    topicName.TextAlign = ContentAlignment.TopLeft;
                     topicName.Dock = DockStyle.Fill;
 
                     topicDate.Font = FormsManager.Instance.fontType;
@@ -648,7 +831,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
                     int topicId = j - 1;
 
-                    viewTopicButton.Click += (sender1, EventArgs) => { viewTopicButton_Click(sender1, EventArgs, topicId); };
+                    viewTopicButton.Click += (sender1, EventArgs) => { viewTopicButton_Click(sender1, EventArgs, topicId, true); };
                     addTopicButton.Click += (sender1, EventArgs) => { addTopicButton_Click(sender1, EventArgs, topicId); };
                 }
             }
@@ -674,11 +857,340 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             }
         }
 
-        private void viewTopicButton_Click(object sender, EventArgs eventArgs, int topicId)
+        private void viewTopicButton_Click(object sender, EventArgs eventArgs, int topicId, bool JustList)
         {
+            this.Controls.Clear();
 
+            int articleContentWidth = 400, articleContentHeight = 200;
+            int photoSize = 280;
+
+            Label topicNameL = new Label();
+            this.Controls.Add(topicNameL);
+            topicNameL.Text = "Article title";
+            topicNameL.Size = FormsManager.Instance.buttonSize;
+            topicNameL.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height);
+            //design
+            topicNameL.Font = FormsManager.Instance.fontType;
+            topicNameL.ForeColor = FormsManager.Instance.bColor;
+            topicNameL.FlatStyle = FormsManager.Instance.flatStyle;
+
+            RichTextBox topicNameText = new RichTextBox();
+            this.Controls.Add(topicNameText);
+            topicNameText.Size = new Size(articleContentWidth, FormsManager.Instance.buttonHeight);
+            topicNameText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent);
+            topicNameText.Name = "TopicName";
+            topicNameText.WordWrap = true;
+            //design
+            topicNameText.ReadOnly = true;
+            topicNameText.Text = TopicList.Instance.Topics[topicId].topicName;
+            topicNameText.Font = FormsManager.Instance.fontType;
+            topicNameText.BackColor = FormsManager.Instance.bColor;
+            topicNameText.ForeColor = FormsManager.Instance.tColor;
+            topicNameText.BorderStyle = FormsManager.Instance.borderStyle;
+
+            Label topicContentL = new Label();
+            this.Controls.Add(topicContentL);
+            topicContentL.Text = "Content";
+            topicContentL.Size = FormsManager.Instance.buttonSize;
+            topicContentL.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent * 2);
+            //design
+            topicContentL.Font = FormsManager.Instance.fontType;
+            topicContentL.ForeColor = FormsManager.Instance.bColor;
+            topicContentL.FlatStyle = FormsManager.Instance.flatStyle;
+
+            RichTextBox topicContectText = new RichTextBox();
+            this.Controls.Add(topicContectText);
+            topicContectText.Size = new Size(articleContentWidth, articleContentHeight);
+            topicContectText.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.height + FormsManager.Instance.indent * 3);
+            topicContectText.WordWrap = true;
+            topicContectText.Name = "TopicContent";
+            //design
+            topicContectText.ReadOnly = true;
+            topicContectText.Text = TopicList.Instance.Topics[topicId].topicContent;
+            topicContectText.Font = FormsManager.Instance.fontType;
+            topicContectText.BackColor = FormsManager.Instance.bColor;
+            topicContectText.ForeColor = FormsManager.Instance.tColor;
+            topicContectText.BorderStyle = FormsManager.Instance.borderStyle;
+
+            PictureBox imageControl = new PictureBox();
+            imageControl.Name = "TopicPhoto";
+            imageControl.Size = new Size(photoSize, photoSize);
+            imageControl.Location = new Point(FormsManager.Instance.block2 + articleContentWidth + 20, topicNameText.Location.Y);
+            imageControl.SizeMode = PictureBoxSizeMode.Zoom;
+            this.Controls.Add(imageControl);
+            if (TopicList.Instance.Topics[topicId].topicPhoto != null)
+            {
+                imageControl.Image = TopicList.Instance.Topics[topicId].topicPhoto;
+            }
+
+            Button cancelButton = new Button();
+            this.Controls.Add(cancelButton);
+            cancelButton.Text = "Back";
+            cancelButton.Size = FormsManager.Instance.buttonSize;
+            cancelButton.Location = new Point(FormsManager.Instance.block2, FormsManager.Instance.indent / 2);
+            //design
+            cancelButton.Font = FormsManager.Instance.fontType;
+            cancelButton.BackColor = FormsManager.Instance.bColor;
+            cancelButton.ForeColor = FormsManager.Instance.tColor;
+            cancelButton.FlatStyle = FormsManager.Instance.flatStyle;
+            cancelButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+
+            if (JustList)
+            {
+                cancelButton.Click += viewTopicsButton_Click;
+            }
+            else
+            {
+                cancelButton.Click += addJournalButton_Click;
+            }
         }
-        
+
+
+        //View Journal List Button
+        private void viewJournalsButton_Click(object sender, EventArgs eventArgs)
+        {
+            journalAlreadyExist = false;
+            this.Controls.Clear();
+            TableLayoutPanel buttonsPanel = new TableLayoutPanel();
+            buttonsPanel.Name = "ButtonsTablePanel";
+            buttonsPanel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+            buttonsPanel.Size = FormsManager.Instance.panelSize;
+            buttonsPanel.Top = 0;
+            buttonsPanel.BackColor = FormsManager.Instance.bColor;
+            buttonsPanel.RowCount = 1;
+            buttonsPanel.ColumnCount = 3;
+            buttonsPanel.ColumnStyles.Clear();
+            buttonsPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+            this.Controls.Add(buttonsPanel);
+            buttonsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            buttonsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+            buttonsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
+
+            Button backButton = new Button();
+            backButton.Font = FormsManager.Instance.fontType;
+            backButton.BackColor = FormsManager.Instance.bColor;
+            backButton.ForeColor = FormsManager.Instance.tColor;
+            backButton.FlatStyle = FormsManager.Instance.flatStyle;
+            backButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+            backButton.Text = "Back";
+            backButton.Size = FormsManager.Instance.buttonSize;
+            buttonsPanel.Controls.Add(backButton, 0, 0);
+
+            Label sortLabel = new Label();
+            sortLabel.Text = "Sort by";
+            sortLabel.TextAlign = ContentAlignment.MiddleCenter;
+            sortLabel.Size = FormsManager.Instance.buttonSize;
+            sortLabel.Font = FormsManager.Instance.fontType;
+            sortLabel.ForeColor = FormsManager.Instance.tColor;
+            sortLabel.FlatStyle = FormsManager.Instance.flatStyle;
+            buttonsPanel.Controls.Add(sortLabel, 1, 0);
+
+            ComboBox sortComboBox = new ComboBox();
+            sortComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            sortComboBox.Items.AddRange(FormsManager.Instance.sort);
+            sortComboBox.Size = FormsManager.Instance.buttonSize;
+            sortComboBox.Name = "SortTextbox";
+            sortComboBox.Font = FormsManager.Instance.fontType;
+            sortComboBox.BackColor = FormsManager.Instance.bColor;
+            sortComboBox.ForeColor = FormsManager.Instance.tColor;
+            sortComboBox.FlatStyle = FormsManager.Instance.flatStyle;
+            buttonsPanel.Controls.Add(sortComboBox, 2, 0);
+
+            backButton.Click += CreateButtonDelegate;
+            sortComboBox.SelectedIndexChanged += sortJournalsComboBox_IndexChanged;
+            viewListOfJournals(null, null);
+        }
+
+        private void sortJournalsComboBox_IndexChanged(object sender, EventArgs eventArgs)
+        {
+            ComboBox TopicName = Controls.Find("SortTextbox", true)[0] as ComboBox;
+            string text1 = TopicName.Text;
+
+            string selectedSortType = text1;
+
+            foreach (Control control in this.Controls)
+            {
+                if (!control.Name.Equals("ButtonsTablePanel"))
+                    this.Controls.Remove(control);
+            }
+
+            if (selectedSortType == FormsManager.Instance.sort[0])
+            {
+                JournalList.Instance.Journals.Sort((j1, j2) => j1.journalName.CompareTo(j2.journalName));
+            }
+            if (selectedSortType == FormsManager.Instance.sort[1])
+            {
+                JournalList.Instance.Journals.Sort((j1, j2) => j1.date.CompareTo(j2.date));
+            }
+            if (selectedSortType == FormsManager.Instance.sort[2])
+            {
+                JournalList.Instance.Journals.Sort((j1, j2) => j1.author.CompareTo(j2.author));
+            }
+
+            viewListOfJournals(null, null);
+        }
+
+        public void viewListOfJournals(object sender, EventArgs eventArgs)
+        {
+            if (TopicList.Instance.Topics.Count != 0)
+            {
+                TableLayoutPanel panel = new TableLayoutPanel();
+                panel.AutoScroll = true;
+                panel.Width = FormsManager.Instance.panelWidth;
+                panel.Height = FormsManager.Instance.panelHeight * (TopicList.Instance.Topics.Count + 1);
+                panel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                panel.RowCount = TopicList.Instance.Topics.Count();
+                panel.ColumnCount = 6;
+                panel.ColumnStyles.Clear();
+                panel.RowStyles.Clear();
+                panel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+                panel.Top = FormsManager.Instance.panelHeight;
+                this.Controls.Add(panel);
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+                panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+
+                var journalNameL = new Label();
+                var journalDateL = new Label();
+                var journalAuthorL = new Label();
+                var journalTopicsCountL= new Label();
+                var journalReadyForPrintL = new Label();
+
+                //design
+                journalNameL.Font = FormsManager.Instance.fontType;
+                journalNameL.ForeColor = FormsManager.Instance.bColor;
+                journalNameL.FlatStyle = FormsManager.Instance.flatStyle;
+                journalNameL.TextAlign = ContentAlignment.MiddleLeft;
+                journalNameL.Dock = DockStyle.Fill;
+
+                journalDateL.Font = FormsManager.Instance.fontType;
+                journalDateL.ForeColor = FormsManager.Instance.bColor;
+                journalDateL.FlatStyle = FormsManager.Instance.flatStyle;
+                journalDateL.TextAlign = ContentAlignment.MiddleLeft;
+                journalDateL.Dock = DockStyle.Fill;
+
+                journalAuthorL.Font = FormsManager.Instance.fontType;
+                journalAuthorL.ForeColor = FormsManager.Instance.bColor;
+                journalAuthorL.FlatStyle = FormsManager.Instance.flatStyle;
+                journalAuthorL.TextAlign = ContentAlignment.MiddleLeft;
+                journalAuthorL.Dock = DockStyle.Fill;
+
+                journalTopicsCountL.Font = FormsManager.Instance.fontType;
+                journalTopicsCountL.ForeColor = FormsManager.Instance.bColor;
+                journalTopicsCountL.FlatStyle = FormsManager.Instance.flatStyle;
+                journalTopicsCountL.TextAlign = ContentAlignment.MiddleLeft;
+                journalTopicsCountL.Dock = DockStyle.Fill;
+
+                journalReadyForPrintL.Font = FormsManager.Instance.fontType;
+                journalReadyForPrintL.ForeColor = FormsManager.Instance.bColor;
+                journalReadyForPrintL.FlatStyle = FormsManager.Instance.flatStyle;
+                journalReadyForPrintL.TextAlign = ContentAlignment.MiddleLeft;
+                journalReadyForPrintL.Dock = DockStyle.Fill;
+
+                int k = 0;
+
+                journalNameL.Text = "Name";
+                panel.Controls.Add(journalNameL, k++, 0);
+
+                journalDateL.Text = "Date";
+                panel.Controls.Add(journalDateL, k++, 0);
+
+                journalAuthorL.Text = "Author";
+                panel.Controls.Add(journalAuthorL, k++, 0);
+
+                journalTopicsCountL.Text = "Topics";
+                panel.Controls.Add(journalTopicsCountL, k++, 0);
+
+                journalReadyForPrintL.Text = "Print";
+                panel.Controls.Add(journalReadyForPrintL, k, 0);
+
+                for (int j = 1; j < TopicList.Instance.Topics.Count() + 1; j++)
+                {
+                    panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+                    var journalName = new Label();
+                    var journalDate = new Label();
+                    var journalAuthor = new Label();
+                    var journalTopicsCount = new Label();
+                    var journalReadyForPrint = new Label();
+
+                    //design
+                    journalName.Font = FormsManager.Instance.fontType;
+                    journalName.ForeColor = FormsManager.Instance.bColor;
+                    journalName.FlatStyle = FormsManager.Instance.flatStyle;
+                    journalName.TextAlign = ContentAlignment.TopLeft;
+                    journalName.Dock = DockStyle.Fill;
+
+                    journalDate.Font = FormsManager.Instance.fontType;
+                    journalDate.ForeColor = FormsManager.Instance.bColor;
+                    journalDate.FlatStyle = FormsManager.Instance.flatStyle;
+                    journalDate.TextAlign = ContentAlignment.MiddleLeft;
+                    journalDate.Dock = DockStyle.Fill;
+
+                    journalAuthor.Font = FormsManager.Instance.fontType;
+                    journalAuthor.ForeColor = FormsManager.Instance.bColor;
+                    journalAuthor.FlatStyle = FormsManager.Instance.flatStyle;
+                    journalAuthor.TextAlign = ContentAlignment.MiddleLeft;
+                    journalAuthor.Dock = DockStyle.Fill;
+
+                    journalTopicsCount.Font = FormsManager.Instance.fontType;
+                    journalTopicsCount.ForeColor = FormsManager.Instance.bColor;
+                    journalTopicsCount.FlatStyle = FormsManager.Instance.flatStyle;
+                    journalTopicsCount.TextAlign = ContentAlignment.MiddleCenter;
+                    journalTopicsCount.Dock = DockStyle.Fill;
+
+                    journalReadyForPrint.Font = FormsManager.Instance.fontType;
+                    journalReadyForPrint.ForeColor = FormsManager.Instance.bColor;
+                    journalReadyForPrint.FlatStyle = FormsManager.Instance.flatStyle;
+                    journalReadyForPrint.TextAlign = ContentAlignment.MiddleCenter;
+                    journalReadyForPrint.Dock = DockStyle.Fill;
+
+                    var editJournalButton = new Button();
+                    //design
+                    editJournalButton.Size = FormsManager.Instance.buttonSize;
+                    editJournalButton.Font = FormsManager.Instance.fontType;
+                    editJournalButton.BackColor = FormsManager.Instance.bColor;
+                    editJournalButton.ForeColor = FormsManager.Instance.tColor;
+                    editJournalButton.FlatStyle = FormsManager.Instance.flatStyle;
+                    editJournalButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+                    editJournalButton.Text = "Edit";
+
+                    int i = 0;
+
+                    journalName.Text = JournalList.Instance.Journals[j - 1].journalName;
+                    panel.Controls.Add(journalName, i++, j);
+
+                    journalDate.Text = JournalList.Instance.Journals[j - 1].date;
+                    panel.Controls.Add(journalDate, i++, j);
+
+                    journalAuthor.Text = JournalList.Instance.Journals[j - 1].author;
+                    panel.Controls.Add(journalAuthor, i++, j);
+
+                    journalTopicsCount.Text = JournalList.Instance.Journals[j - 1].journalTopics.Count.ToString();
+                    panel.Controls.Add(journalTopicsCount, i++, j);
+
+                    journalReadyForPrint.Text = JournalList.Instance.Journals[j - 1].readyForPrint == true ? "✓" : "×";
+                    panel.Controls.Add(journalReadyForPrint, i++, j);
+
+                    panel.Controls.Add(editJournalButton, i++, j);
+
+                    int journalId = j - 1;
+
+                    editJournalButton.Click += (sender1, EventArgs) => { editJournalTopicButton_Click(sender1, EventArgs, journalId); };
+                }
+            }
+        }
+
+        private void editJournalTopicButton_Click(object sender, EventArgs eventArgs, int journalId)
+        {
+            journalAlreadyExist = true;
+            existedJournalId = journalId;
+            addJournalButton_Click(null, null);
+        }
+
 
         //Sign Out
         private void signoutButton_Click(object sender, EventArgs eventArgs)
