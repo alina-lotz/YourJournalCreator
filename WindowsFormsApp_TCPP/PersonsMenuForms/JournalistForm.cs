@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,166 +23,19 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             this.BackColor = FormsManager.Instance.bgColor;
 
             this.Shown += CreateButtonDelegate;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
 
             FormsManager.Instance.Forms.Add(this);
+        }
+
+        public void FormIsClosing(object sender, EventArgs e)
+        {
+            FormsManager.Instance.Forms[0].Close();
         }
 
         private void JournalistForm_Load(object sender, EventArgs e)
         {
 
-        }
-
-        public void viewListOfTopic(object sender, EventArgs eventArgs)
-        {
-            if (TopicList.Instance.Topics.Count != 0)
-            {
-                TableLayoutPanel panel = new TableLayoutPanel();
-                panel.AutoScroll = true;
-                panel.Width = FormsManager.Instance.panelWidth;
-                panel.Height = FormsManager.Instance.panelHeight * (TopicList.Instance.Topics.Count + 1);
-                panel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-                panel.RowCount = TopicList.Instance.Topics.Count();
-                panel.ColumnCount = 6;
-                panel.ColumnStyles.Clear();
-                panel.RowStyles.Clear();
-                panel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-                panel.Top = FormsManager.Instance.panelHeight;
-                this.Controls.Add(panel);
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
-                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
-                panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-
-                var topicNameL = new Label();
-                var topicDateL = new Label();
-                var topicAuthorL = new Label();
-                var topicReadyForEditL = new Label();
-                var topicReadyPhotosL = new Label();
-
-                //design
-                topicNameL.Font = FormsManager.Instance.fontType;
-                topicNameL.ForeColor = FormsManager.Instance.bColor;
-                topicNameL.FlatStyle = FormsManager.Instance.flatStyle;
-                topicNameL.TextAlign = ContentAlignment.MiddleLeft;
-                topicNameL.Dock = DockStyle.Fill;
-
-                topicDateL.Font = FormsManager.Instance.fontType;
-                topicDateL.ForeColor = FormsManager.Instance.bColor;
-                topicDateL.FlatStyle = FormsManager.Instance.flatStyle;
-                topicDateL.TextAlign = ContentAlignment.MiddleLeft;
-                topicDateL.Dock = DockStyle.Fill;
-
-                topicAuthorL.Font = FormsManager.Instance.fontType;
-                topicAuthorL.ForeColor = FormsManager.Instance.bColor;
-                topicAuthorL.FlatStyle = FormsManager.Instance.flatStyle;
-                topicAuthorL.TextAlign = ContentAlignment.MiddleLeft;
-                topicAuthorL.Dock = DockStyle.Fill;
-
-                topicReadyForEditL.Font = FormsManager.Instance.fontType;
-                topicReadyForEditL.ForeColor = FormsManager.Instance.bColor;
-                topicReadyForEditL.FlatStyle = FormsManager.Instance.flatStyle;
-                topicReadyForEditL.TextAlign = ContentAlignment.MiddleLeft;
-                topicReadyForEditL.Dock = DockStyle.Fill;
-
-                topicReadyPhotosL.Font = FormsManager.Instance.fontType;
-                topicReadyPhotosL.ForeColor = FormsManager.Instance.bColor;
-                topicReadyPhotosL.FlatStyle = FormsManager.Instance.flatStyle;
-                topicReadyPhotosL.TextAlign = ContentAlignment.MiddleLeft;
-                topicReadyPhotosL.Dock = DockStyle.Fill;
-
-                int k = 0;
-
-                topicNameL.Text = "Name";
-                panel.Controls.Add(topicNameL, k++, 0);
-
-                topicDateL.Text = "Date";
-                panel.Controls.Add(topicDateL, k++, 0);
-
-                topicAuthorL.Text = "Author";
-                panel.Controls.Add(topicAuthorL, k++, 0);
-
-                topicReadyForEditL.Text = "Content";
-                panel.Controls.Add(topicReadyForEditL, k++, 0);
-
-                topicReadyPhotosL.Text = "Photos";
-                panel.Controls.Add(topicReadyPhotosL, k, 0);
-
-                for (int j = 1; j < TopicList.Instance.Topics.Count() + 1; j++)
-                {
-                    panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-                    var topicName = new Label();
-                    var topicDate = new Label();
-                    var topicAuthor = new Label();
-                    var topicReadyForEdit = new Label();
-                    var topicReadyPhotos = new Label();
-                    //design
-                    topicName.Font = FormsManager.Instance.fontType;
-                    topicName.ForeColor = FormsManager.Instance.bColor;
-                    topicName.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicName.TextAlign = ContentAlignment.TopLeft;
-                    topicName.Dock = DockStyle.Fill;
-
-                    topicDate.Font = FormsManager.Instance.fontType;
-                    topicDate.ForeColor = FormsManager.Instance.bColor;
-                    topicDate.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicDate.TextAlign = ContentAlignment.MiddleLeft;
-                    topicDate.Dock = DockStyle.Fill;
-
-                    topicAuthor.Font = FormsManager.Instance.fontType;
-                    topicAuthor.ForeColor = FormsManager.Instance.bColor;
-                    topicAuthor.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicAuthor.TextAlign = ContentAlignment.MiddleLeft;
-                    topicAuthor.Dock = DockStyle.Fill;
-
-                    topicReadyForEdit.Font = FormsManager.Instance.fontType;
-                    topicReadyForEdit.ForeColor = FormsManager.Instance.bColor;
-                    topicReadyForEdit.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicReadyForEdit.TextAlign = ContentAlignment.MiddleCenter;
-                    topicReadyForEdit.Dock = DockStyle.Fill;
-
-                    topicReadyPhotos.Font = FormsManager.Instance.fontType;
-                    topicReadyPhotos.ForeColor = FormsManager.Instance.bColor;
-                    topicReadyPhotos.FlatStyle = FormsManager.Instance.flatStyle;
-                    topicReadyPhotos.TextAlign = ContentAlignment.MiddleCenter;
-                    topicReadyPhotos.Dock = DockStyle.Fill;
-
-                    var editButton = new Button();
-                    //design
-                    editButton.Size = FormsManager.Instance.buttonSize;
-                    editButton.Font = FormsManager.Instance.fontType;
-                    editButton.BackColor = FormsManager.Instance.bColor;
-                    editButton.ForeColor = FormsManager.Instance.tColor;
-                    editButton.FlatStyle = FormsManager.Instance.flatStyle;
-                    editButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
-                    editButton.Text = "Edit";
-
-                    int i = 0;
-
-                    topicName.Text = TopicList.Instance.Topics[j - 1].topicName;
-                    panel.Controls.Add(topicName, i++, j);
-
-                    topicDate.Text = TopicList.Instance.Topics[j - 1].date;
-                    panel.Controls.Add(topicDate, i++, j);
-
-                    topicAuthor.Text = TopicList.Instance.Topics[j - 1].author;
-                    panel.Controls.Add(topicAuthor, i++, j);
-
-                    topicReadyForEdit.Text = TopicList.Instance.Topics[j - 1].readyForEdit == true ? "✓" : "×";
-                    panel.Controls.Add(topicReadyForEdit, i++, j);
-
-                    topicReadyPhotos.Text = TopicList.Instance.Topics[j - 1].readyPhotos == true ? "✓" : "×";
-                    panel.Controls.Add(topicReadyPhotos, i++, j);
-
-                    panel.Controls.Add(editButton, i, j);
-
-                    int topicId = j - 1;
-
-                    editButton.Click += (sender1, EventArgs) => { editButton_Click(sender1, eventArgs, topicId); };
-                }
-            }
         }
         
         private void CreateButtonDelegate(object sender, EventArgs e)
@@ -235,6 +89,19 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             exitButton.ForeColor = FormsManager.Instance.tColor;
             exitButton.FlatStyle = FormsManager.Instance.flatStyle;
             exitButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+
+            Button delAccButton = new Button();
+            this.Controls.Add(delAccButton);
+            delAccButton.Text = "Remove account";
+            delAccButton.Size = FormsManager.Instance.buttonSize;
+            delAccButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 5);
+            //design
+            delAccButton.Font = FormsManager.Instance.fontType;
+            delAccButton.BackColor = FormsManager.Instance.bColor;
+            delAccButton.ForeColor = FormsManager.Instance.tColor;
+            delAccButton.FlatStyle = FormsManager.Instance.flatStyle;
+            delAccButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+            delAccButton.Click += delAccButton_Click;
 
             addTopicButton.Click += addTopicButton_Click;
             viewTopicsButton.Click += viewTopicsButton_Click;
@@ -385,6 +252,159 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
             viewListOfTopic(null, null);
         }
+        
+        private void viewListOfTopic(object sender, EventArgs eventArgs)
+        {
+            if (TopicList.Instance.Topics.Count() != 0)
+            {
+                TableLayoutPanel panel = new TableLayoutPanel();
+                panel.AutoScroll = true;
+                panel.Width = FormsManager.Instance.panelWidth;
+                panel.Height = FormsManager.Instance.panelHeight * (TopicList.Instance.Topics.Count() + 1);
+                panel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                panel.RowCount = TopicList.Instance.Topics.Count();
+                panel.ColumnCount = 6;
+                panel.ColumnStyles.Clear();
+                panel.RowStyles.Clear();
+                panel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+                panel.Top = FormsManager.Instance.panelHeight;
+                this.Controls.Add(panel);
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5));
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+                panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+
+                var topicNameL = new Label();
+                var topicDateL = new Label();
+                var topicAuthorL = new Label();
+                var topicReadyForEditL = new Label();
+                var topicReadyPhotosL = new Label();
+
+                //design
+                topicNameL.Font = FormsManager.Instance.fontType;
+                topicNameL.ForeColor = FormsManager.Instance.bColor;
+                topicNameL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicNameL.TextAlign = ContentAlignment.MiddleLeft;
+                topicNameL.Dock = DockStyle.Fill;
+
+                topicDateL.Font = FormsManager.Instance.fontType;
+                topicDateL.ForeColor = FormsManager.Instance.bColor;
+                topicDateL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicDateL.TextAlign = ContentAlignment.MiddleLeft;
+                topicDateL.Dock = DockStyle.Fill;
+
+                topicAuthorL.Font = FormsManager.Instance.fontType;
+                topicAuthorL.ForeColor = FormsManager.Instance.bColor;
+                topicAuthorL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicAuthorL.TextAlign = ContentAlignment.MiddleLeft;
+                topicAuthorL.Dock = DockStyle.Fill;
+
+                topicReadyForEditL.Font = FormsManager.Instance.fontType;
+                topicReadyForEditL.ForeColor = FormsManager.Instance.bColor;
+                topicReadyForEditL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicReadyForEditL.TextAlign = ContentAlignment.MiddleLeft;
+                topicReadyForEditL.Dock = DockStyle.Fill;
+
+                topicReadyPhotosL.Font = FormsManager.Instance.fontType;
+                topicReadyPhotosL.ForeColor = FormsManager.Instance.bColor;
+                topicReadyPhotosL.FlatStyle = FormsManager.Instance.flatStyle;
+                topicReadyPhotosL.TextAlign = ContentAlignment.MiddleLeft;
+                topicReadyPhotosL.Dock = DockStyle.Fill;
+
+                int k = 0;
+
+                topicNameL.Text = "Name";
+                panel.Controls.Add(topicNameL, k++, 0);
+
+                topicDateL.Text = "Date";
+                panel.Controls.Add(topicDateL, k++, 0);
+
+                topicAuthorL.Text = "Author";
+                panel.Controls.Add(topicAuthorL, k++, 0);
+
+                topicReadyForEditL.Text = "Content";
+                panel.Controls.Add(topicReadyForEditL, k++, 0);
+
+                topicReadyPhotosL.Text = "Photos";
+                panel.Controls.Add(topicReadyPhotosL, k, 0);
+
+                for (int j = 1; j < TopicList.Instance.Topics.Count() + 1; j++)
+                {
+                    panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+                    var topicName = new Label();
+                    var topicDate = new Label();
+                    var topicAuthor = new Label();
+                    var topicReadyForEdit = new Label();
+                    var topicReadyPhotos = new Label();
+                    //design
+                    topicName.Font = FormsManager.Instance.fontType;
+                    topicName.ForeColor = FormsManager.Instance.bColor;
+                    topicName.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicName.TextAlign = ContentAlignment.TopLeft;
+                    topicName.Dock = DockStyle.Fill;
+
+                    topicDate.Font = FormsManager.Instance.fontType;
+                    topicDate.ForeColor = FormsManager.Instance.bColor;
+                    topicDate.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicDate.TextAlign = ContentAlignment.MiddleLeft;
+                    topicDate.Dock = DockStyle.Fill;
+
+                    topicAuthor.Font = FormsManager.Instance.fontType;
+                    topicAuthor.ForeColor = FormsManager.Instance.bColor;
+                    topicAuthor.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicAuthor.TextAlign = ContentAlignment.MiddleLeft;
+                    topicAuthor.Dock = DockStyle.Fill;
+
+                    topicReadyForEdit.Font = FormsManager.Instance.fontType;
+                    topicReadyForEdit.ForeColor = FormsManager.Instance.bColor;
+                    topicReadyForEdit.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicReadyForEdit.TextAlign = ContentAlignment.MiddleCenter;
+                    topicReadyForEdit.Dock = DockStyle.Fill;
+
+                    topicReadyPhotos.Font = FormsManager.Instance.fontType;
+                    topicReadyPhotos.ForeColor = FormsManager.Instance.bColor;
+                    topicReadyPhotos.FlatStyle = FormsManager.Instance.flatStyle;
+                    topicReadyPhotos.TextAlign = ContentAlignment.MiddleCenter;
+                    topicReadyPhotos.Dock = DockStyle.Fill;
+
+                    var editButton = new Button();
+                    //design
+                    editButton.Size = FormsManager.Instance.buttonSize;
+                    editButton.Font = FormsManager.Instance.fontType;
+                    editButton.BackColor = FormsManager.Instance.bColor;
+                    editButton.ForeColor = FormsManager.Instance.tColor;
+                    editButton.FlatStyle = FormsManager.Instance.flatStyle;
+                    editButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+                    editButton.Text = "Edit";
+
+                    int i = 0;
+
+                    topicName.Text = TopicList.Instance.Topics[j - 1].topicName;
+                    panel.Controls.Add(topicName, i++, j);
+
+                    topicDate.Text = TopicList.Instance.Topics[j - 1].date;
+                    panel.Controls.Add(topicDate, i++, j);
+
+                    topicAuthor.Text = TopicList.Instance.Topics[j - 1].author;
+                    panel.Controls.Add(topicAuthor, i++, j);
+
+                    topicReadyForEdit.Text = TopicList.Instance.Topics[j - 1].readyForEdit == true ? "✓" : "×";
+                    panel.Controls.Add(topicReadyForEdit, i++, j);
+
+                    topicReadyPhotos.Text = TopicList.Instance.Topics[j - 1].readyPhotos == true ? "✓" : "×";
+                    panel.Controls.Add(topicReadyPhotos, i++, j);
+
+                    panel.Controls.Add(editButton, i, j);
+
+                    int topicId = j - 1;
+
+                    editButton.Click += (sender1, EventArgs) => { editButton_Click(sender1, eventArgs, topicId); };
+                }
+            }
+        }
 
         private void sortComboBox_IndexChanged(object sender, EventArgs eventArgs)
         {
@@ -474,9 +494,14 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             imageControl.Location = new Point(FormsManager.Instance.block2 + articleContentWidth + 20, topicNameText.Location.Y);
             imageControl.SizeMode = PictureBoxSizeMode.Zoom;
             this.Controls.Add(imageControl);
-            if (TopicList.Instance.Topics[topicId].topicPhoto != null)
+            if (TopicList.Instance.Topics[topicId].topicPhoto != null && TopicList.Instance.Topics[topicId].topicPhoto.Length != 0)
             {
-                imageControl.Image = TopicList.Instance.Topics[topicId].topicPhoto;
+                using (var ms = new MemoryStream(TopicList.Instance.Topics[topicId].topicPhoto))
+                {
+                    Bitmap tempBM = new Bitmap(ms);
+                    //newTopic.topicPhoto = new Bitmap(tempBM);
+                    imageControl.Image = tempBM;
+                }
             }
 
             Button editButton = new Button();
@@ -515,9 +540,28 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             cancelButton.FlatStyle = FormsManager.Instance.flatStyle;
             cancelButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
+            Button delTopicButton = new Button();
+            delTopicButton.Text = "Delete article";
+            delTopicButton.Size = FormsManager.Instance.buttonSize;
+            delTopicButton.Location = new Point(imageControl.Location.X, editButton.Location.Y);
+            //design
+            delTopicButton.Font = FormsManager.Instance.fontType;
+            delTopicButton.BackColor = FormsManager.Instance.bColor;
+            delTopicButton.ForeColor = FormsManager.Instance.tColor;
+            delTopicButton.FlatStyle = FormsManager.Instance.flatStyle;
+            delTopicButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+            this.Controls.Add(delTopicButton);
+
             editButton.Click += (sender1, EventArgs) => { confirmEditing_Click(sender1, eventArgs, topicId); };
             readyForEditButton.Click += (sender1, EventArgs) => { confirmReadyForEdit_Click(sender1, eventArgs, topicId); };
+            delTopicButton.Click += (sender1, EventArgs) => { delTopicButton_Click(sender1, eventArgs, topicId); };
             cancelButton.Click += viewTopicsButton_Click;
+        }
+
+        private void delTopicButton_Click(object sender, EventArgs eventArgs, int topicId)
+        {
+            TopicList.Instance.Topics.RemoveAt(topicId);
+            viewTopicsButton_Click(null, null);
         }
 
         private void confirmEditing_Click(object sender, EventArgs eventArgs, int topicId)
@@ -633,6 +677,22 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         private void exitButton_Click(object sender, EventArgs eventArgs)
         {
             FormsManager.Instance.Forms[0].Close();
+        }
+
+        private void delAccButton_Click(object sender, EventArgs eventArgs)
+        {
+            for (int i = 0; i < PersonsList.persons.Count(); i++)
+            {
+                if (PersonsList.persons[i].Name == Journalist.Instance.Name
+                    && PersonsList.persons[i].Password == Journalist.Instance.Password)
+                {
+                    PersonsList.persons.RemoveAt(i);
+                    break;
+                }
+            }
+            FormsManager.Instance.Forms[0].Show();
+            FormsManager.Instance.Forms.RemoveAt(FormsManager.Instance.Forms.Count - 1);
+            this.Close();
         }
     }
 }

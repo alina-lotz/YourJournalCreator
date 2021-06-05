@@ -12,7 +12,7 @@ namespace WindowsFormsApp_TCPP
         public string topicName, topicContent;
         public bool readyPhotos, readyForEdit, readyForJournal;
         public string date;
-        public Bitmap topicPhoto;
+        public byte[] topicPhoto;
         public string author;
 
         public Topic() 

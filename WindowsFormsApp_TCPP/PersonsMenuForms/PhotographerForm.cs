@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +22,14 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             this.BackColor = FormsManager.Instance.bgColor;
 
             this.Shown += CreateButtonDelegate;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
 
             FormsManager.Instance.Forms.Add(this);
+        }
+
+        public void FormIsClosing(object sender, EventArgs e)
+        {
+            FormsManager.Instance.Forms[0].Close();
         }
 
         private void PhotographerForm_Load(object sender, EventArgs e)
@@ -70,11 +77,23 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             exitButton.FlatStyle = FormsManager.Instance.flatStyle;
             exitButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
 
+            Button delAccButton = new Button();
+            this.Controls.Add(delAccButton);
+            delAccButton.Text = "Remove account";
+            delAccButton.Size = FormsManager.Instance.buttonSize;
+            delAccButton.Location = new Point(FormsManager.Instance.block1, FormsManager.Instance.height + FormsManager.Instance.indent * 4);
+            //design
+            delAccButton.Font = FormsManager.Instance.fontType;
+            delAccButton.BackColor = FormsManager.Instance.bColor;
+            delAccButton.ForeColor = FormsManager.Instance.tColor;
+            delAccButton.FlatStyle = FormsManager.Instance.flatStyle;
+            delAccButton.FlatAppearance.BorderSize = FormsManager.Instance.borderSize;
+            delAccButton.Click += delAccButton_Click;
+
             viewTopicsButton.Click += viewTopicsButton_Click;
             signoutButton.Click += signoutButton_Click;
             exitButton.Click += exitButton_Click;
         }
-
 
         private void viewTopicsButton_Click(object sender, EventArgs eventArgs)
         {
@@ -159,14 +178,14 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             viewListOfTopic(null, null);
         }
 
-        public void viewListOfTopic(object sender, EventArgs eventArgs)
+        private void viewListOfTopic(object sender, EventArgs eventArgs)
         {
-            if (TopicList.Instance.Topics.Count != 0)
+            if (TopicList.Instance.Topics.Count() != 0)
             {
                 TableLayoutPanel panel = new TableLayoutPanel();
                 panel.AutoScroll = true;
                 panel.Width = FormsManager.Instance.panelWidth;
-                panel.Height = FormsManager.Instance.panelHeight * (TopicList.Instance.Topics.Count + 1);
+                panel.Height = FormsManager.Instance.panelHeight * (TopicList.Instance.Topics.Count() + 1);
                 panel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
                 panel.RowCount = TopicList.Instance.Topics.Count();
                 panel.ColumnCount = 6;
@@ -299,7 +318,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     topicReadyForEdit.Text = TopicList.Instance.Topics[j - 1].readyForEdit == true ? "✓" : "×";
                     panel.Controls.Add(topicReadyForEdit, i++, j);
 
-                    topicReadyPhotos.Text = TopicList.Instance.Topics[j - 1].readyForEdit == true ? "✓" : "×";
+                    topicReadyPhotos.Text = TopicList.Instance.Topics[j - 1].readyPhotos == true ? "✓" : "×";
                     panel.Controls.Add(topicReadyPhotos, i++, j);
 
                     panel.Controls.Add(editButton, i, j);
@@ -372,9 +391,14 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             imageControl.Location = new Point(FormsManager.Instance.block2 + articleContentWidth + 20, topicNameText.Location.Y);
             imageControl.SizeMode = PictureBoxSizeMode.Zoom;
             this.Controls.Add(imageControl);
-            if (TopicList.Instance.Topics[topicId].topicPhoto != null)
+            if (TopicList.Instance.Topics[topicId].topicPhoto != null && TopicList.Instance.Topics[topicId].topicPhoto.Length != 0)
             {
-                imageControl.Image = TopicList.Instance.Topics[topicId].topicPhoto;
+                using (var ms = new MemoryStream(TopicList.Instance.Topics[topicId].topicPhoto))
+                {
+                    Bitmap tempBM = new Bitmap(ms);
+                    //newTopic.topicPhoto = new Bitmap(tempBM);
+                    imageControl.Image = tempBM;
+                }
             }
 
             Button addButton = new Button();
@@ -418,6 +442,12 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             cancelButton.Click += viewTopicsButton_Click;
         }
 
+        public static byte[] ImageToByte(Bitmap img)
+        {
+            ImageConverter converter = new ImageConverter();
+            return (byte[])converter.ConvertTo(img, typeof(byte[]));
+        }
+
         private void addPhoto_Click(object sender, EventArgs eventArgs, int topicId)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
@@ -438,7 +468,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                     //this.Controls.Add(imageControl);
 
                     Bitmap myBitmap = new Bitmap(fileDialog.FileName);
-                    TopicList.Instance.Topics[topicId].topicPhoto = myBitmap;
+                    TopicList.Instance.Topics[topicId].topicPhoto = ImageToByte(myBitmap);
                     editButton_Click(null, null, topicId);
                     //imageControl.Image = myBitmap;
                 }
@@ -464,6 +494,22 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         private void exitButton_Click(object sender, EventArgs eventArgs)
         {
             FormsManager.Instance.Forms[0].Close();
+        }
+
+        private void delAccButton_Click(object sender, EventArgs eventArgs)
+        {
+            for (int i = 0; i < PersonsList.persons.Count(); i++)
+            {
+                if (PersonsList.persons[i].Name == Photographer.Instance.Name
+                    && PersonsList.persons[i].Password == Photographer.Instance.Password)
+                {
+                    PersonsList.persons.RemoveAt(i);
+                    break;
+                }
+            }
+            FormsManager.Instance.Forms[0].Show();
+            FormsManager.Instance.Forms.RemoveAt(FormsManager.Instance.Forms.Count - 1);
+            this.Close();
         }
     }
 }

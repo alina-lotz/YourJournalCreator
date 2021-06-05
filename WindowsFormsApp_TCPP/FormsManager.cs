@@ -51,6 +51,14 @@ namespace WindowsFormsApp_TCPP
         {
             //list of forms references
             Forms = new List<Form>();
+            //colors
+            bgColor = System.Drawing.Color.CadetBlue;
+            bColor = System.Drawing.Color.SeaShell;
+            tColor = System.Drawing.Color.CadetBlue;
+            //font
+            fontSize = 12;
+            textFont = "Segoe UI";
+            fontType = new Font(textFont, fontSize, FontStyle.Bold);
             //roles
             roles = new string[] { "Journalist", "Photographer", "Editor", "Layout artist" };
             //sort types
@@ -63,14 +71,6 @@ namespace WindowsFormsApp_TCPP
             buttonWidth = 170;
             buttonHeight = 30;
             buttonSize = new Size(buttonWidth, buttonHeight);
-            //font
-            fontSize = 12;
-            textFont = "Segoe UI";
-            fontType = new Font(textFont, fontSize, FontStyle.Bold);
-            //colors
-            bgColor = System.Drawing.Color.CadetBlue;
-            bColor = System.Drawing.Color.SeaShell;
-            tColor = System.Drawing.Color.CadetBlue;
             //flat style
             flatStyle = FlatStyle.Flat;
             borderSize = 0;

@@ -54,17 +54,17 @@ namespace WindowsFormsApp_TCPP
                     newTopic.readyForJournal = br.ReadBoolean();
 
                     int n = br.ReadInt32();
-                    byte[] newbytes = new byte[n];
+                    newTopic.topicPhoto = new byte[n];
                     for (int j = 0; j < n; j++)
                     {
-                        newbytes[j] = br.ReadByte();
+                        newTopic.topicPhoto[j] = br.ReadByte();
                     }
                     
-                    using (var ms = new MemoryStream(newbytes))
-                    {
-                        Bitmap tempBM = new Bitmap(ms);
-                        newTopic.topicPhoto = new Bitmap(tempBM);
-                    }
+                    //using (var ms = new MemoryStream(newbytes))
+                    //{
+                        //Bitmap tempBM = new Bitmap(ms);
+                        //newTopic.topicPhoto = new Bitmap(tempBM);
+                    //}
 
                     TopicList.Instance.Topics.Add(newTopic);
                 }
@@ -146,10 +146,17 @@ namespace WindowsFormsApp_TCPP
                 bw.Write(TopicList.Instance.Topics[i].readyForEdit);
                 bw.Write(TopicList.Instance.Topics[i].readyForJournal);
 
-                byte[] newbytes = new byte[ImageToByte(TopicList.Instance.Topics[i].topicPhoto).Length];
-                newbytes = ImageToByte(TopicList.Instance.Topics[i].topicPhoto);
-                bw.Write(newbytes.Length);
-                bw.Write(newbytes);
+                //byte[] newbytes = new byte[ImageToByte(TopicList.Instance.Topics[i].topicPhoto).Length];
+                //newbytes = ImageToByte(TopicList.Instance.Topics[i].topicPhoto);
+                if (TopicList.Instance.Topics[i].topicPhoto != null)
+                {
+                    bw.Write(TopicList.Instance.Topics[i].topicPhoto.Length);
+                    bw.Write(TopicList.Instance.Topics[i].topicPhoto);
+                }
+                else
+                {
+                    bw.Write((int) 0);
+                }
             }
             bw.Close();
 
