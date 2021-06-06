@@ -18,19 +18,21 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         {
             InitializeComponent();
             this.StartPosition = FormsManager.Instance.formPosition;
-            this.Text = "Journalist";
+            this.Text = "CreateYourJournal";
             this.Size = FormsManager.Instance.formSize;
             this.BackColor = FormsManager.Instance.bgColor;
+            this.MinimumSize = this.Size;
+            this.MaximumSize = this.Size;
 
             this.Shown += CreateButtonDelegate;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
 
-            FormsManager.Instance.Forms.Add(this);
+            //FormsManager.Instance.Forms.Add(this);
         }
 
         public void FormIsClosing(object sender, EventArgs e)
         {
-            FormsManager.Instance.Forms[0].Close();
+            //FormsManager.Instance.Forms[0].Close();
         }
 
         private void JournalistForm_Load(object sender, EventArgs e)
@@ -602,7 +604,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         private void signoutButton_Click(object sender, EventArgs eventArgs)
         {
             FormsManager.Instance.Forms[0].Show();
-            FormsManager.Instance.Forms.RemoveAt(FormsManager.Instance.Forms.Count - 1);
+            FormsManager.Instance.Forms.Remove(this);
             this.Close();
         }
 
@@ -691,7 +693,8 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
                 }
             }
             FormsManager.Instance.Forms[0].Show();
-            FormsManager.Instance.Forms.RemoveAt(FormsManager.Instance.Forms.Count - 1);
+            FormsManager.Instance.Forms.Remove(this);
+            this.Controls.Clear();
             this.Close();
         }
     }

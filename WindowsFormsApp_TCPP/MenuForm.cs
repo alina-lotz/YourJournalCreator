@@ -22,11 +22,13 @@ namespace WindowsFormsApp_TCPP
         public MenuForm()
         {
             InitializeComponent();
-            this.Text = "Welcome to my Program";
+            this.Text = "CreateYourJournal";
             this.StartPosition = FormsManager.Instance.formPosition;
             this.Size = FormsManager.Instance.formSize;
             this.BackColor = FormsManager.Instance.bgColor;
-            
+            this.MinimumSize = this.Size;
+            this.MaximumSize = this.Size;
+
             this.Shown += CreateButtonDelegate;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
 

@@ -85,9 +85,9 @@ namespace WindowsFormsApp_TCPP
             panelWidth = formWidth - 40;
             panelSize = new Size(panelWidth, panelHeight);
             //files
-            topicListData = "D:/topicListData.dat";
-            journalListData = "D:/journalListData.dat";
-            personListData = "D:/personListData.dat";
+            topicListData = "topicListData.dat";
+            journalListData = "journalListData.dat";
+            personListData = "personListData.dat";
         }
 
     }

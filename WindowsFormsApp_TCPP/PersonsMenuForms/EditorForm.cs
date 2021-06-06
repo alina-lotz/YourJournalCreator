@@ -17,9 +17,11 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
         {
             InitializeComponent();
             this.StartPosition = FormsManager.Instance.formPosition;
-            this.Text = "Editor";
+            this.Text = "CreateYourJournal";
             this.Size = FormsManager.Instance.formSize;
             this.BackColor = FormsManager.Instance.bgColor;
+            this.MinimumSize = this.Size;
+            this.MaximumSize = this.Size;
 
             this.Shown += CreateButtonDelegate;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
@@ -29,7 +31,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
 
         public void FormIsClosing(object sender, EventArgs e)
         {
-            FormsManager.Instance.Forms[0].Close();
+            //FormsManager.Instance.Forms[0].Close();
         }
 
         private void EditorForm_Load(object sender, EventArgs e)
@@ -509,6 +511,7 @@ namespace WindowsFormsApp_TCPP.PersonsMenuForms
             }
             FormsManager.Instance.Forms[0].Show();
             FormsManager.Instance.Forms.RemoveAt(FormsManager.Instance.Forms.Count - 1);
+            this.Controls.Clear();
             this.Close();
         }
     }
